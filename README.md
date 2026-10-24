@@ -27,7 +27,7 @@ Run `npm run assets` if the brand files change (icons, favicon.ico and the OG ca
 
 Hosted on Vercel, connected to github.com/Darkrizz/felixis-website: every push to `main` deploys to production. `vercel.json` sets the build (`npm ci`, `npm run build`, output `dist`, Node 24 from `engines`), trailing-slash URLs and the security and cache headers. `404.html` is served automatically for unknown paths. Manual deploy from this folder: `npx vercel --prod`.
 
-The domain felixis.dev is attached in the Vercel project (Settings, Domains); DNS at the registrar must point to Vercel as shown there. After the first deploy, submit https://felixis.dev/sitemap.xml in Google Search Console.
+felixis.dev and www.felixis.dev are attached in the Vercel project (Settings, Domains); DNS stays at Name.com (A records for the apex, CNAME for www, as Vercel lists them), and www 308-redirects to felixis.dev. After the first deploy, submit https://felixis.dev/sitemap.xml in Google Search Console.
 
 ## Pages
 
