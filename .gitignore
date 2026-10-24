@@ -6,3 +6,6 @@ tools/out/
 *.log
 .env
 .npmrc
+
+.vercel
+.env*
