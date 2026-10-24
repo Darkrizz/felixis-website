@@ -35,5 +35,8 @@
     "lighthouse": "13.5.0",
     "subset-font": "2.9.0",
     "typescript": "6.0.3"
+  },
+  "engines": {
+    "node": "24.x"
   }
 }
