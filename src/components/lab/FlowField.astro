@@ -1,0 +1,78 @@
+---
+// Thousands of cells drifting on curl noise. The pointer parts the current.
+---
+
+<div class="ff" data-demo="flow">
+  <canvas class="ff__canvas" data-ff-canvas role="img" aria-label="Flow field of drifting cells. Move the pointer through it to part the current."></canvas>
+  <div class="ff__bar">
+    <label><span>Cells <output class="dots" data-ff-n-out>4000</output></span><input type="range" min="500" max="9000" step="500" value="4000" data-ff-n /></label>
+    <label><span>Scale <output class="dots" data-ff-s-out>1.0</output></span><input type="range" min="0.3" max="3" step="0.1" value="1" data-ff-s /></label>
+    <label class="ff__check"><input type="checkbox" checked data-ff-trails /> Trails</label>
+    <button class="ff__btn" type="button" data-ff-reset>Scatter again</button>
+  </div>
+</div>
+
+<style>
+  .ff {
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .ff__canvas {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--ground);
+    touch-action: none;
+  }
+
+  .ff__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--s-3) var(--s-6);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--line);
+  }
+
+  .ff__bar > label:not(.ff__check) {
+    display: grid;
+    gap: 4px;
+    flex: 1 1 200px;
+    max-width: 320px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .ff__bar output {
+    color: var(--leaf);
+    font-size: 1rem;
+  }
+
+  .ff__bar input[type='range'] {
+    accent-color: var(--leaf);
+    height: 22px;
+  }
+
+  .ff__check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    font-weight: 600;
+  }
+
+  .ff__check input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--leaf);
+  }
+
+  .ff__btn {
+    min-height: 44px;
+    padding: 0 6px;
+    font-weight: 600;
+    color: var(--ink-2);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+</style>

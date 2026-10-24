@@ -1,0 +1,155 @@
+---
+// Variable type driven by the pointer (width, weight) and scroll speed (slant).
+---
+
+<style is:inline>
+  @font-face {
+    font-family: 'Lab Anybody';
+    src: url('/fonts/anybody-latin.woff2') format('woff2');
+    font-weight: 100 900;
+    font-stretch: 50% 150%;
+    font-display: swap;
+  }
+</style>
+
+<div class="tp" data-demo="type">
+  <div class="tp__stage" data-tp-stage>
+    <p class="tp__text" contenteditable="true" spellcheck="false" data-tp-text aria-label="Editable sample text">Felixis</p>
+  </div>
+  <div class="tp__bar">
+    <fieldset class="tp__fonts">
+      <legend class="sr-only">Typeface</legend>
+      <label><input type="radio" name="tpf" value="anybody" checked /><span>Anybody</span></label>
+      <label><input type="radio" name="tpf" value="familjen" /><span>Familjen Grotesk</span></label>
+      <label><input type="radio" name="tpf" value="doto" /><span>Doto</span></label>
+    </fieldset>
+    <dl class="tp__axes" aria-live="off">
+      <div><dt data-ax1-name>Width</dt><dd class="dots" data-ax1>100</dd></div>
+      <div><dt>Weight</dt><dd class="dots" data-ax2>500</dd></div>
+      <div><dt data-ax3-name>Slant</dt><dd class="dots" data-ax3>0</dd></div>
+    </dl>
+    <p class="tp__how">Move across the stage: left to right sets the first axis, top to bottom the weight. Scroll fast to lean it. Click the word to type your own.</p>
+  </div>
+</div>
+
+<style>
+  .tp {
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .tp__stage {
+    display: grid;
+    place-items: center;
+    min-height: min(62vh, 620px);
+    overflow: hidden;
+    cursor: crosshair;
+    background-image: linear-gradient(var(--line) 1px, transparent 1px);
+    background-size: 100% 48px;
+  }
+
+  .tp__text {
+    max-width: 100%;
+    padding: 0 var(--s-3);
+    font-family: 'Lab Anybody', var(--font-sans);
+    font-size: clamp(4rem, 15vw, 15rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    white-space: nowrap;
+    outline: none;
+    caret-color: var(--gold);
+  }
+
+  .tp__text:focus-visible {
+    box-shadow: 0 6px 0 -3px var(--gold);
+  }
+
+  .tp[data-font='familjen'] .tp__text {
+    font-family: var(--font-sans);
+  }
+
+  .tp[data-font='doto'] .tp__text {
+    font-family: var(--font-dots);
+    color: var(--leaf);
+  }
+
+  .tp__bar {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: var(--s-3) var(--s-6);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--line);
+  }
+
+  .tp__fonts {
+    display: flex;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .tp__fonts label {
+    position: relative;
+  }
+
+  .tp__fonts input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .tp__fonts span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--line-strong);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+
+  .tp__fonts input:checked + span {
+    color: var(--ground);
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .tp__fonts input:focus-visible + span {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .tp__axes {
+    display: flex;
+    gap: var(--s-4);
+  }
+
+  .tp__axes dt {
+    font-size: 0.8125rem;
+    color: var(--ink-2);
+  }
+
+  .tp__axes dd {
+    font-size: 1.375rem;
+    color: var(--leaf);
+    min-width: 3ch;
+  }
+
+  .tp__how {
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+
+  @media (max-width: 900px) {
+    .tp__bar {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

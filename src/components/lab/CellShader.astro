@@ -1,0 +1,119 @@
+---
+// A fragment shader that draws everything as cells; the pointer paints light into a trail
+// buffer that the cells read from.
+---
+
+<div class="cs" data-demo="cells">
+  <div class="cs__stage">
+    <canvas class="cs__canvas" data-cs-canvas aria-label="Cell shader. Move or drag the pointer to paint light." role="img"></canvas>
+    <p class="cs__fallback" data-cs-fallback hidden>This experiment needs WebGL2, which this browser has turned off.</p>
+  </div>
+  <div class="cs__bar">
+    <label><span>Cell size <output class="dots" data-cs-size-out>18</output>px</span><input type="range" min="8" max="48" value="18" data-cs-size /></label>
+    <label><span>Speed <output class="dots" data-cs-speed-out>1.0</output></span><input type="range" min="0" max="3" step="0.1" value="1" data-cs-speed /></label>
+    <fieldset class="cs__mode">
+      <legend class="sr-only">Cell style</legend>
+      <label><input type="radio" name="csm" value="0" checked /><span>Halftone</span></label>
+      <label><input type="radio" name="csm" value="1" /><span>Solid</span></label>
+    </fieldset>
+  </div>
+</div>
+
+<style>
+  .cs {
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .cs__stage {
+    position: relative;
+  }
+
+  .cs__canvas {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #13201a;
+    touch-action: none;
+    cursor: crosshair;
+  }
+
+  .cs__fallback {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: var(--s-6);
+    text-align: center;
+    color: var(--ink-2);
+  }
+
+  .cs__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--s-3) var(--s-6);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--line);
+  }
+
+  .cs__bar > label {
+    display: grid;
+    gap: 4px;
+    flex: 1 1 200px;
+    max-width: 320px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .cs__bar output {
+    color: var(--leaf);
+    font-size: 1rem;
+  }
+
+  .cs__bar input[type='range'] {
+    accent-color: var(--leaf);
+    height: 22px;
+  }
+
+  .cs__mode {
+    display: flex;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .cs__mode label {
+    position: relative;
+  }
+
+  .cs__mode input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .cs__mode span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--line-strong);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+
+  .cs__mode input:checked + span {
+    color: var(--ground);
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .cs__mode input:focus-visible + span {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+</style>

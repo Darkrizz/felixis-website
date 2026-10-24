@@ -1,0 +1,494 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/ui/Button.astro';
+import Clover from '../components/brand/Clover.astro';
+import ContactBand from '../components/sections/ContactBand.astro';
+import Range from '../components/sections/Range.astro';
+import Proof from '../components/sections/Proof.astro';
+import SitemapDemo from '../components/demos/SitemapDemo.astro';
+import PositioningDemo from '../components/demos/PositioningDemo.astro';
+import PaletteDemo from '../components/demos/PaletteDemo.astro';
+import TypeScaleDemo from '../components/demos/TypeScaleDemo.astro';
+import SpringDemo from '../components/demos/SpringDemo.astro';
+import ContainerDemo from '../components/demos/ContainerDemo.astro';
+import SnippetDemo from '../components/demos/SnippetDemo.astro';
+import FunnelDemo from '../components/demos/FunnelDemo.astro';
+import { SERVICES } from '../data/services';
+import { DETAIL } from '../data/serviceDetail';
+import { NAV } from '../data/copy';
+import { site } from '../data/site.config.mjs';
+
+export function getStaticPaths() {
+  return SERVICES.map((s) => ({ params: { service: s.key } }));
+}
+
+const { service } = Astro.params as { service: keyof typeof DETAIL };
+const s = SERVICES.find((x) => x.key === service)!;
+const d = DETAIL[service];
+const index = SERVICES.indexOf(s);
+const prev = SERVICES[index - 1];
+const next = SERVICES[index + 1];
+const DEMOS: Record<string, any> = {
+  sitemap: SitemapDemo,
+  positioning: PositioningDemo,
+  palette: PaletteDemo,
+  typescale: TypeScaleDemo,
+  spring: SpringDemo,
+  container: ContainerDemo,
+  snippet: SnippetDemo,
+  funnel: FunnelDemo,
+};
+const NOTCH = ['tl', 'tr', 'bl', 'br'];
+const schema = [
+  {
+    '@type': 'Service',
+    name: `${s.name} by ${site.tradingName}`,
+    serviceType: s.name,
+    description: d.description,
+    url: new URL(s.href, site.url).href,
+    provider: { '@id': new URL('/#organization', site.url).href },
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: `What ${s.name.toLowerCase()} includes`,
+      itemListElement: d.deliverables.map((x) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: x.title, description: x.text } })),
+    },
+  },
+  {
+    '@type': 'FAQPage',
+    mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+
+<Base title={d.title} description={d.description} page="service" formation={service} crumbs={[{ name: s.name, path: s.href }]} schema={schema}>
+  <section class="sv-hero" aria-labelledby="sv-title" data-service={service}>
+    <div class="wrap grid sv-hero__inner">
+      <div class="sv-hero__copy">
+        <p class="sv-hero__label"><span class="dots">{s.n}</span> {s.name}</p>
+        <h1 id="sv-title" class="sv-hero__title" data-fx="weight-field" data-inspect="H1 / service">{d.hero}</h1>
+        <p class="lede sv-hero__intro">{d.intro}</p>
+        <div class="sv-hero__actions">
+          <Button href="/start/" variant="gold" magnetic>{NAV.cta}</Button>
+          <Button href="#deliverables" variant="line" data-scroll-to="deliverables">What you get</Button>
+        </div>
+      </div>
+      <div class="sv-hero__stage">
+        <div class="sv-hero__mark" data-voxel-anchor="service" data-inspect={`Voxel anchor / ${service} glyph`}>
+          <Clover tight solid class="sv-hero__svg" />
+          <button class="sv-hero__poke" type="button" data-ctl="explode" aria-label="Scatter the shape and rebuild it"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="deliverables" class="sv-del" aria-labelledby="del-title">
+    <div class="wrap">
+      <h2 id="del-title" class="sv-h2">What you get</h2>
+      <ul class="sv-del__grid" role="list">
+        {
+          d.deliverables.map((x, i) => (
+            <li class="sv-del__item nx" data-notch={NOTCH[i]} data-size="l">
+              <h3 class="sv-del__title">{x.title}</h3>
+              <p class="sv-del__text">{x.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {
+    d.demos.map((demo, i) => {
+      if (demo.id === 'range') return <Range />;
+      if (demo.id === 'proof') return <Proof />;
+      const Demo = DEMOS[demo.id];
+      return (
+        <section class="sv-demo" aria-labelledby={`demo-${demo.id}`}>
+          <div class="wrap">
+            <div class="sv-demo__head">
+              <h2 id={`demo-${demo.id}`} class="sv-h2">
+                {demo.title}
+              </h2>
+              <p class="sv-demo__text">{demo.text}</p>
+            </div>
+            <div class="sv-demo__frame nx" data-size="l" data-notch={i % 2 ? 'tr' : 'tl'}>
+              <Demo />
+            </div>
+          </div>
+        </section>
+      );
+    })
+  }
+
+  <section class="sv-fit" aria-labelledby="fit-title">
+    <div class="wrap sv-fit__inner">
+      <div class="sv-fit__mark" data-voxel-anchor="fit">
+        <Clover tight class="sv-fit__svg" data-fit-svg data-upto={String((index + 1) * 8 + (index === 3 ? 1 : 0))} />
+      </div>
+      <div class="sv-fit__copy">
+        <h2 id="fit-title" class="sv-h2">Leaf {index + 1} of 4</h2>
+        <p class="sv-fit__text">
+          {s.name} is {index === 0 ? 'where the clover starts' : index === 3 ? 'the leaf that completes the clover' : `the ${index === 1 ? 'second' : 'third'} leaf`}. Each one can be booked on its own, but the
+          work goes furthest when all four grow together.
+        </p>
+        <nav class="sv-fit__nav" aria-label="Other services">
+          {
+            prev && (
+              <a href={prev.href} class="sv-fit__link">
+                <span class="sv-fit__dir">Before this</span>
+                <span class="sv-fit__name">{prev.name}</span>
+              </a>
+            )
+          }
+          {
+            next && (
+              <a href={next.href} class="sv-fit__link">
+                <span class="sv-fit__dir">After this</span>
+                <span class="sv-fit__name">{next.name}</span>
+              </a>
+            )
+          }
+          {
+            !next && (
+              <a href="/" class="sv-fit__link">
+                <span class="sv-fit__dir">Back to</span>
+                <span class="sv-fit__name">The whole clover</span>
+              </a>
+            )
+          }
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <section class="sv-faq" aria-labelledby="faq-title">
+    <div class="wrap sv-faq__inner">
+      <h2 id="faq-title" class="sv-h2">Questions people ask</h2>
+      <div class="sv-faq__list">
+        {
+          d.faq.map((f) => (
+            <details class="sv-faq__item">
+              <summary>
+                <span>{f.q}</span>
+                <span class="sv-faq__icon" aria-hidden="true" />
+              </summary>
+              <p>{f.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <ContactBand />
+</Base>
+
+
+<style>
+  .sv-hero {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-block: calc(var(--nav-h) + var(--s-6)) var(--s-12);
+  }
+
+  .sv-hero__inner {
+    align-items: center;
+    row-gap: var(--s-8);
+  }
+
+  .sv-hero__copy {
+    grid-column: 1 / span 7;
+  }
+
+  .sv-hero__label {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-weight: 600;
+    font-size: var(--step-1);
+    margin-bottom: var(--s-3);
+  }
+
+  .sv-hero__label .dots {
+    color: var(--leaf);
+  }
+
+  [data-service='design'] .sv-hero__label .dots {
+    color: var(--gold-text);
+  }
+
+  .sv-hero__title {
+    font-size: clamp(2.5rem, 1.2rem + 4.6vw, 5.5rem);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    max-width: 12em;
+  }
+
+  .sv-hero__intro {
+    margin-top: var(--s-6);
+    max-width: 46ch;
+  }
+
+  .sv-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: var(--s-6);
+  }
+
+  .sv-hero__stage {
+    grid-column: 8 / span 5;
+    display: grid;
+    justify-items: center;
+  }
+
+  .sv-hero__mark {
+    position: relative;
+    width: min(100%, 32vw, 480px);
+    aspect-ratio: 1;
+  }
+
+  .sv-hero__svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.18;
+  }
+
+  :global(html.gl-ready) .sv-hero__svg {
+    opacity: 0;
+  }
+
+  .sv-hero__poke {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+  }
+
+  .sv-h2 {
+    font-size: var(--step-4);
+    font-weight: 600;
+  }
+
+  .sv-del {
+    padding-block: var(--s-12);
+  }
+
+  .sv-del__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-2);
+    margin-top: var(--s-6);
+  }
+
+  .sv-del__item {
+    --nx-fill: var(--surface);
+    padding: var(--s-6);
+    min-height: 220px;
+    display: grid;
+    align-content: end;
+    gap: var(--s-2);
+  }
+
+  .sv-del__title {
+    font-size: var(--step-2);
+    letter-spacing: -0.025em;
+  }
+
+  .sv-del__text {
+    color: var(--ink-2);
+    max-width: 44ch;
+  }
+
+  .sv-demo {
+    padding-block: var(--s-12);
+  }
+
+  .sv-demo__head {
+    display: grid;
+    gap: var(--s-2);
+    max-width: 60ch;
+    margin-bottom: var(--s-4);
+  }
+
+  .sv-demo__text {
+    color: var(--ink-2);
+  }
+
+  .sv-demo__frame {
+    --nx-fill: var(--surface);
+    padding: var(--s-6);
+  }
+
+  .sv-demo__frame :global(.sitemap) {
+    min-height: 420px;
+  }
+
+  .sv-fit {
+    padding-block: var(--s-16);
+  }
+
+  .sv-fit__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: var(--s-8) var(--gutter);
+    align-items: center;
+  }
+
+  .sv-fit__mark {
+    width: min(100%, 320px);
+    aspect-ratio: 1;
+  }
+
+  .sv-fit__svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .sv-fit__svg :global(.clover__cell.is-off) {
+    fill: var(--surface-2);
+  }
+
+  :global(html.gl-ready) .sv-fit__svg {
+    opacity: 0;
+  }
+
+  .sv-fit__copy {
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .sv-fit__text {
+    color: var(--ink-2);
+    max-width: 52ch;
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .sv-fit__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: var(--s-2);
+  }
+
+  .sv-fit__link {
+    display: grid;
+    gap: 2px;
+    min-width: min(200px, 100%);
+    padding: var(--s-3) var(--s-4);
+    border: 1px solid var(--line-strong);
+    text-decoration: none;
+    transition: border-color var(--d-1) var(--ease-out);
+  }
+
+  .sv-fit__link:hover {
+    border-color: var(--leaf);
+  }
+
+  .sv-fit__dir {
+    font-size: var(--step--1);
+    color: var(--ink-2);
+  }
+
+  .sv-fit__name {
+    font-size: var(--step-2);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .sv-faq {
+    padding-block: var(--s-12);
+  }
+
+  .sv-faq__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: var(--s-6) var(--gutter);
+  }
+
+  .sv-faq__list {
+    border-top: 1px solid var(--line);
+  }
+
+  .sv-faq__item {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .sv-faq__item summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-3);
+    min-height: 64px;
+    padding-block: var(--s-2);
+    font-size: var(--step-1);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .sv-faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .sv-faq__icon {
+    position: relative;
+    flex: none;
+    width: 14px;
+    height: 14px;
+  }
+
+  .sv-faq__icon::before,
+  .sv-faq__icon::after {
+    content: '';
+    position: absolute;
+    background: var(--leaf);
+    transition: transform var(--d-2) steps(3, jump-end);
+  }
+
+  .sv-faq__icon::before {
+    inset: 6px 0;
+  }
+
+  .sv-faq__icon::after {
+    inset: 0 6px;
+  }
+
+  .sv-faq__item[open] .sv-faq__icon::after {
+    transform: scaleY(0);
+  }
+
+  .sv-faq__item p {
+    padding-bottom: var(--s-4);
+    color: var(--ink-2);
+    max-width: 62ch;
+  }
+
+  @media (max-width: 1023px) {
+    .sv-hero__copy,
+    .sv-hero__stage {
+      grid-column: 1 / -1;
+    }
+    .sv-hero__stage {
+      justify-items: start;
+    }
+    .sv-hero__mark {
+      width: min(100%, 60vw, 380px);
+    }
+    .sv-fit__inner,
+    .sv-faq__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .sv-del__grid {
+      grid-template-columns: 1fr;
+    }
+    .sv-demo__frame {
+      padding: var(--s-3);
+    }
+  }
+</style>

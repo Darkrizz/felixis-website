@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.cache/
+tools/out/
+*.log
+.env
+.npmrc

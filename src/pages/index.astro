@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/sections/Hero.astro';
+import Statement from '../components/sections/Statement.astro';
+import Leaves from '../components/sections/Leaves.astro';
+import Range from '../components/sections/Range.astro';
+import LabIndex from '../components/sections/LabIndex.astro';
+import Proof from '../components/sections/Proof.astro';
+import ContactBand from '../components/sections/ContactBand.astro';
+import { HOME } from '../data/copy';
+---
+
+<Base title={HOME.title} description={HOME.description} page="home" formation="clover3d">
+  <Hero />
+  <Statement />
+  <Leaves />
+  <Range />
+  <LabIndex />
+  <Proof />
+  <ContactBand />
+</Base>

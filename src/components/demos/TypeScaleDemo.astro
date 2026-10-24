@@ -1,0 +1,118 @@
+---
+// Design demo: a modular type scale from a base size and a ratio, rendered in the brand face.
+const RATIOS = [
+  { v: 1.125, label: 'Major second, 1.125' },
+  { v: 1.2, label: 'Minor third, 1.2' },
+  { v: 1.25, label: 'Major third, 1.25' },
+  { v: 1.333, label: 'Perfect fourth, 1.333' },
+  { v: 1.5, label: 'Perfect fifth, 1.5' },
+  { v: 1.618, label: 'Golden ratio, 1.618' },
+];
+---
+
+<div class="ts" data-demo="typescale" data-inspect="Demo / type scale">
+  <div class="ts__controls">
+    <label>
+      <span>Base size <output class="dots" data-base-out>18</output>px</span>
+      <input type="range" min="14" max="22" step="1" value="18" data-base />
+    </label>
+    <label>
+      <span>Ratio</span>
+      <select data-ratio>
+        {RATIOS.map((r) => <option value={r.v} selected={r.v === 1.25}>{r.label}</option>)}
+      </select>
+    </label>
+  </div>
+  <ol class="ts__steps" role="list" data-steps aria-label="Type scale, largest first"></ol>
+  <figure class="ts__fig">
+    <figcaption class="sr-only">CSS custom properties for this scale</figcaption>
+    <pre class="ts__code" data-code></pre>
+  </figure>
+</div>
+
+<style>
+  .ts {
+    display: grid;
+    gap: var(--s-4);
+    min-width: 0;
+  }
+
+  .ts__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3) var(--s-6);
+  }
+
+  .ts__controls label {
+    display: grid;
+    gap: 6px;
+    flex: 1 1 220px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .ts__controls output {
+    color: var(--leaf);
+    font-size: 1rem;
+    margin-inline: 4px;
+  }
+
+  .ts__controls input {
+    accent-color: var(--leaf);
+    height: 24px;
+  }
+
+  .ts__controls select {
+    min-height: 44px;
+    padding: 0 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--line-strong);
+    font-weight: 500;
+  }
+
+  .ts__steps {
+    display: grid;
+    gap: 2px;
+    overflow: hidden;
+  }
+
+  .ts__steps :global(li) {
+    display: grid;
+    grid-template-columns: 70px minmax(0, 1fr);
+    align-items: baseline;
+    gap: var(--s-2);
+    padding-block: 4px;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+
+  .ts__steps :global(.ts__px) {
+    font-family: var(--font-dots);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--leaf);
+  }
+
+  .ts__steps :global(.ts__sample) {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .ts__fig {
+    margin: 0;
+  }
+
+  .ts__code {
+    margin: 0;
+    padding: var(--s-3);
+    background: var(--surface-2);
+    font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    color: var(--ink-2);
+  }
+</style>

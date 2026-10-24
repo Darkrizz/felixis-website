@@ -1,0 +1,179 @@
+---
+import { NAV } from '../../data/copy';
+import { site } from '../../data/site.config.mjs';
+import Button from '../ui/Button.astro';
+
+const email = site.email.includes('.example') ? null : site.email;
+const socials = site.socials.filter((s) => s.href);
+const year = new Date().getFullYear();
+---
+
+<footer class="footer" data-footer>
+  <div class="wrap">
+    <div class="footer__mark" data-voxel-anchor="footer" data-inspect="Voxel anchor / wordmark">
+      <p class="footer__word" aria-hidden="true">Felixis</p>
+    </div>
+
+    <div class="footer__cols grid">
+      <nav class="footer__col" aria-label="Services">
+        <h2 class="footer__h">Services</h2>
+        <ul role="list">
+          {
+            NAV.links
+              .filter((l) => l.leaf !== 'lab')
+              .map((l) => (
+                <li>
+                  <a href={l.href}>{l.label}</a>
+                </li>
+              ))
+          }
+        </ul>
+      </nav>
+      <nav class="footer__col" aria-label="Studio">
+        <h2 class="footer__h">Studio</h2>
+        <ul role="list">
+          <li><a href="/lab/">Lab</a></li>
+          <li><a href="/#proof">Measured live</a></li>
+        </ul>
+      </nav>
+      <div class="footer__col footer__contact">
+        <h2 class="footer__h">Contact</h2>
+        {email && <a class="footer__email" href={`mailto:${email}`}>{email}</a>}
+        {site.phone && <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a>}
+        {
+          site.whatsapp && (
+            <a href={`https://wa.me/${site.whatsapp}?text=${encodeURIComponent('Hi Felixis, I have a project in mind.')}`} rel="noopener" target="_blank">
+              WhatsApp us
+            </a>
+          )
+        }
+        {site.location && <p>{site.location}</p>}
+        {
+          socials.length > 0 && (
+            <ul role="list" class="footer__socials">
+              {socials.map((s) => (
+                <li>
+                  <a href={s.href} rel="me noopener" target="_blank">
+                    {s.label} {s.handle}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        <Button href="/start/" variant="line" size="s">{NAV.cta}</Button>
+      </div>
+    </div>
+
+    <div class="footer__base">
+      <p>© {year} {site.legalName}</p>
+      <a href="#main" data-to-top>Back to top</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    z-index: var(--z-content);
+    padding-top: var(--s-16);
+    padding-bottom: var(--s-4);
+    border-top: 1px solid var(--line);
+  }
+
+  .footer__mark {
+    position: relative;
+    aspect-ratio: 1200 / 360;
+    container-type: inline-size;
+    margin-bottom: var(--s-12);
+  }
+
+  /* The DOM wordmark is the fallback; the voxels take over its exact box when WebGL is on. */
+  .footer__word {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    justify-content: center;
+    font-size: 36.5cqw;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+    transition: opacity var(--d-3) var(--ease-out);
+  }
+
+  :global(html.gl-ready) .footer:not([data-wordmark='dom']) .footer__word {
+    opacity: 0;
+  }
+
+  .footer__cols {
+    row-gap: var(--s-6);
+    padding-bottom: var(--s-12);
+  }
+
+  .footer__col {
+    grid-column: span 3;
+    display: grid;
+    align-content: start;
+    gap: var(--s-2);
+  }
+
+  .footer__contact {
+    grid-column: 8 / span 5;
+    justify-items: start;
+  }
+
+  .footer__h {
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--ink-2);
+    margin-bottom: var(--s-1);
+  }
+
+  .footer__col ul {
+    display: grid;
+    gap: 4px;
+  }
+
+  .footer__col a:not(.btn) {
+    display: inline-block;
+    padding-block: 6px;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer__col a:not(.btn):hover {
+    text-decoration: underline;
+  }
+
+  .footer__email {
+    font-size: var(--step-2);
+  }
+
+  .footer__base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--s-2);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--line);
+    font-size: var(--step--1);
+    color: var(--ink-2);
+  }
+
+  .footer__base a {
+    text-decoration: none;
+    padding-block: 6px;
+  }
+
+  @media (max-width: 767px) {
+    .footer__col {
+      grid-column: span 3;
+    }
+    .footer__contact {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

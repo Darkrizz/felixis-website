@@ -1,0 +1,156 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import { Font } from 'astro:assets';
+import Nav from '../components/chrome/Nav.astro';
+import Footer from '../components/chrome/Footer.astro';
+import Clover from '../components/brand/Clover.astro';
+import { site } from '../data/site.config.mjs';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/shape.css';
+import '../styles/motion.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Voxel formation the page opens with (see scripts/voxel/formations). */
+  formation?: string;
+  /** Page key, used by the router to build the right scroll choreography. */
+  page: string;
+  noindex?: boolean;
+  /** Pages without the fixed WebGL stage (404 keeps its own tiny canvas). */
+  gl?: boolean;
+  /** Breadcrumb trail after Home, for BreadcrumbList structured data. */
+  crumbs?: { name: string; path: string }[];
+  /** Extra JSON-LD objects for this page (Service, FAQPage...). */
+  schema?: Record<string, unknown>[];
+  /** Social card alt text. */
+  ogAlt?: string;
+}
+
+const { title, description, formation = 'clover3d', page, noindex = false, gl = true, crumbs = [], schema = [], ogAlt = 'The Felixis pixel clover beside the line: Luck has nothing to do with it.' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImage = new URL('/og.png', site.url).href;
+const orgId = new URL('/#organization', site.url).href;
+const org = {
+  '@type': 'Organization',
+  '@id': orgId,
+  name: site.tradingName,
+  legalName: site.legalName,
+  alternateName: site.name,
+  url: site.url,
+  logo: new URL('/brand/felixis-app-icon.svg', site.url).href,
+  ...(site.email && !site.email.includes('.example') ? { email: site.email } : {}),
+  ...(site.socials.some((s) => s.href) ? { sameAs: site.socials.filter((s) => s.href).map((s) => s.href) } : {}),
+  ...(site.phone ? { telephone: site.phone.replace(/\s/g, '') } : {}),
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'sales',
+    email: site.email,
+    ...(site.phone ? { telephone: site.phone.replace(/\s/g, '') } : {}),
+    url: new URL('/start/', site.url).href,
+    availableLanguage: ['en'],
+  },
+};
+// one @graph per page: the organisation, the website, this page, its breadcrumbs, plus page extras
+const graph: Record<string, unknown>[] = [
+  org,
+  { '@type': 'WebSite', '@id': new URL('/#website', site.url).href, url: site.url, name: site.tradingName, publisher: { '@id': orgId }, inLanguage: 'en-GB' },
+  { '@type': 'WebPage', '@id': canonical, url: canonical, name: title, description, isPartOf: { '@id': new URL('/#website', site.url).href }, about: { '@id': orgId }, inLanguage: 'en-GB', primaryImageOfPage: ogImage },
+  ...(crumbs.length
+    ? [{ '@type': 'BreadcrumbList', itemListElement: [{ name: 'Home', path: '/' }, ...crumbs].map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: new URL(c.path, site.url).href })) }]
+    : []),
+  ...schema,
+];
+const jsonLd = { '@context': 'https://schema.org', '@graph': noindex ? [org] : graph };
+---
+
+<!doctype html>
+<html lang="en-GB" data-theme="dark" data-page={page}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
+    <meta name="author" content={site.tradingName} />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <meta name="theme-color" content="#13201A" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.tradingName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={ogAlt} />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogAlt} />
+    <Font cssVariable="--font-familjen" preload={[{ style: 'normal' }]} />
+    <Font cssVariable="--font-doto" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <slot name="head" />
+    <script is:inline>
+      // Runs before first paint: theme, motion preference, first-visit preloader flag.
+      (function () {
+        var d = document.documentElement;
+        var ls = function (k) {
+          try {
+            return localStorage.getItem(k);
+          } catch (e) {
+            return null;
+          }
+        };
+        d.classList.add('js');
+        // Dark on every visit, whatever the system says. The light toggle lasts for this visit only.
+        var theme = null;
+        try {
+          theme = sessionStorage.getItem('fx-theme');
+        } catch (e) {}
+        d.dataset.theme = theme === 'light' ? 'light' : 'dark';
+        var reduce = ls('fx-motion') === 'reduce' || (ls('fx-motion') !== 'full' && matchMedia('(prefers-reduced-motion: reduce)').matches);
+        if (reduce) d.classList.add('motion-reduce');
+        else if (ls('fx-motion') === 'full') d.classList.add('motion-full');
+        var seen = false;
+        try {
+          seen = sessionStorage.getItem('fx-seen') === '1';
+          sessionStorage.setItem('fx-seen', '1');
+        } catch (e) {}
+        // first visit only: the home page drops the clover into the hero; any other entry page
+        // gets the same cells assembling in the middle of a full-screen loading screen
+        if (!seen && !reduce && !/fx-test/.test(location.search)) d.classList.add(d.dataset.page === 'home' ? 'preload' : 'preload-page');
+      })();
+    </script>
+    <ClientRouter fallback="swap" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="boot" aria-hidden="true">
+      <Clover tight class="boot__mark" solid />
+      <span class="boot__word">Felixis</span>
+    </div>
+    {gl && <canvas id="fx-gl" aria-hidden="true" transition:persist="fx-gl" />}
+    <Nav transition:persist="fx-nav" />
+    <main id="main" tabindex="-1" data-formation={formation}>
+      <slot />
+    </main>
+    <Footer />
+    <canvas class="cover" aria-hidden="true" data-cover transition:persist="fx-cover"></canvas>
+    <div class="sr-only" aria-live="polite" data-announce transition:persist="fx-announce"></div>
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

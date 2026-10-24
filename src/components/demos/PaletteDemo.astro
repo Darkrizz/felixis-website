@@ -1,0 +1,171 @@
+---
+// Design demo: a palette built in OKLCH from one hue, with live WCAG contrast checks.
+---
+
+<div class="palette" data-demo="palette" data-inspect="Demo / palette generator">
+  <div class="palette__controls">
+    <label class="palette__hue">
+      <span>Hue <output class="dots" data-hue-out>152</output></span>
+      <input type="range" min="0" max="359" value="152" data-hue />
+    </label>
+    <fieldset class="palette__mood">
+      <legend>Mood</legend>
+      <label><input type="radio" name="mood" value="calm" /><span>Calm</span></label>
+      <label><input type="radio" name="mood" value="bold" checked /><span>Bold</span></label>
+      <label><input type="radio" name="mood" value="deep" /><span>Deep</span></label>
+    </fieldset>
+  </div>
+  <ol class="palette__swatches" role="list" data-swatches aria-label="Generated palette, lightest to darkest"></ol>
+  <div class="palette__sample" data-sample aria-hidden="true">
+    <span class="palette__sample-h">Sample heading</span>
+    <span class="palette__sample-btn">Button</span>
+    <span class="palette__sample-note" data-sample-note></span>
+  </div>
+</div>
+
+<style>
+  .palette {
+    min-width: 0;
+    display: grid;
+    gap: var(--s-3);
+    height: 100%;
+    align-content: start;
+  }
+
+  .palette__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3) var(--s-6);
+    align-items: end;
+  }
+
+  .palette__hue {
+    display: grid;
+    gap: 6px;
+    flex: 1 1 200px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .palette__hue span {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .palette__hue output {
+    font-size: 1rem;
+    color: var(--leaf);
+  }
+
+  .palette__hue input {
+    width: 100%;
+    accent-color: var(--leaf);
+    height: 24px;
+  }
+
+  .palette__mood {
+    display: flex;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .palette__mood legend {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    float: left;
+    width: 100%;
+  }
+
+  .palette__mood label {
+    position: relative;
+  }
+
+  .palette__mood input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .palette__mood span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-2);
+  }
+
+  .palette__mood input:checked + span {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--ground);
+  }
+
+  .palette__mood input:focus-visible + span {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .palette__swatches {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .palette__swatches :global(li) {
+    display: grid;
+    align-content: space-between;
+    min-height: 92px;
+    padding: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+    transition: background-color var(--d-3) steps(3, jump-end);
+  }
+
+  .palette__swatches :global(.pass) {
+    font-family: var(--font-dots);
+    font-size: 0.9375rem;
+  }
+
+  .palette__sample {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    transition: background-color var(--d-3) steps(3, jump-end);
+  }
+
+  .palette__sample-h {
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  .palette__sample-btn {
+    padding: 6px 14px;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .palette__sample-note {
+    margin-left: auto;
+    font-size: 0.8125rem;
+  }
+
+  @media (max-width: 560px) {
+    .palette__swatches {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

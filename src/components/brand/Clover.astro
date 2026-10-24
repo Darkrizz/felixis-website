@@ -1,0 +1,95 @@
+---
+// The mark, drawn from the 33 cells in brand.ts. Every cell is its own <rect> so the
+// preloader, progress meters and fallbacks can address cells by fill order (data-seq).
+import { CELLS, CELL, cellX, cellY, VIEWBOX, LEAF_PATHS } from '../../data/brand';
+
+interface Props {
+  /** cells: one rect per cell (animatable). plate: adds the dark rounded app-icon plate. */
+  variant?: 'cells' | 'plate';
+  class?: string;
+  id?: string;
+  /** Accessible name. Omit for decorative uses (aria-hidden). */
+  label?: string;
+  /** Crop the viewBox to the cell matrix (11..53) instead of the padded 64 box. */
+  tight?: boolean;
+  /** Draw whole leaves under the cells so large static marks have no antialiasing seams. */
+  solid?: boolean;
+  [key: `data-${string}`]: string | undefined;
+}
+
+const { variant = 'cells', class: cls, id, label, tight = false, solid = false, ...rest } = Astro.props;
+const box = tight ? '11 11 42 42' : `0 0 ${VIEWBOX} ${VIEWBOX}`;
+// A hair of overlap hides antialiasing seams between neighbouring cells of a leaf.
+const o = 0.04;
+---
+
+<svg
+  class:list={['clover', cls]}
+  id={id}
+  viewBox={box}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  focusable="false"
+  {...rest}
+>
+  {variant === 'plate' && <rect class="clover__plate" width="64" height="64" rx="14" />}
+  {
+    solid && (
+      <g class="clover__solid">
+        {Object.entries(LEAF_PATHS).map(([leaf, d]) => (
+          <path d={d} data-leaf={leaf} />
+        ))}
+        <rect x="29" y="29" width="6" height="6" data-leaf="centre" />
+      </g>
+    )
+  }
+  {
+    CELLS.map((cell) => (
+      <rect
+        class="clover__cell"
+        x={cellX(cell.c) - o}
+        y={cellY(cell.r) - o}
+        width={CELL + o * 2}
+        height={CELL + o * 2}
+        data-leaf={cell.leaf}
+        data-seq={cell.seq}
+        style={`--seq:${cell.seq};--c:${cell.c};--r:${cell.r}`}
+      />
+    ))
+  }
+</svg>
+
+<style>
+  .clover__cell {
+    fill: var(--mark-a);
+  }
+  .clover__cell[data-leaf='design'] {
+    fill: var(--gold);
+  }
+  .clover__cell[data-leaf='centre'] {
+    fill: var(--mark-centre);
+  }
+  .clover__plate {
+    fill: var(--forest);
+  }
+  .clover__solid > * {
+    fill: var(--mark-a);
+  }
+  .clover__solid > [data-leaf='design'] {
+    fill: var(--gold);
+  }
+  .clover__solid > [data-leaf='centre'] {
+    fill: var(--mark-centre);
+  }
+  /* while the preloader drops cells in, the solid layer waits */
+  :global(html.preload) .clover__solid,
+  :global(html.preload-page) .clover__solid {
+    animation: clover-solid 1ms linear 1000ms both;
+  }
+  @keyframes clover-solid {
+    from {
+      opacity: 0;
+    }
+  }
+</style>

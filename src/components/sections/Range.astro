@@ -1,0 +1,245 @@
+---
+import { RANGE, POSTER, fontUrl } from '../../data/range';
+import { HOME } from '../../data/copy';
+import '../../styles/range.css';
+
+const first = RANGE[0];
+// @font-face for every language: the browser only downloads a face when the poster uses it.
+const faces = RANGE.flatMap((l) =>
+  l.files.map((f, i) => `@font-face{font-family:'${l.family}';src:url(${fontUrl(l.id, i)}) format('woff2');font-weight:${f.weight};font-style:${f.style ?? 'normal'};font-display:swap}`),
+).join('');
+---
+
+<style is:inline set:html={faces}></style>
+
+<section class="range" aria-labelledby="range-title" data-section="range" data-range data-demo="range">
+  <div class="wrap range__inner">
+    <header class="range__head">
+      <h2 id="range-title" class="range__title" data-inspect="H2 / section">{HOME.range.title}</h2>
+      <p class="range__sub">{HOME.range.sub}</p>
+    </header>
+
+    <div class="range__controls">
+      <div class="range__tabs" role="tablist" aria-label="Design language">
+        {
+          RANGE.map((l, i) => (
+            <button
+              class="range__tab"
+              role="tab"
+              type="button"
+              id={`range-tab-${l.id}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              aria-controls="range-stage"
+              tabindex={i === 0 ? 0 : -1}
+              data-lang={l.id}
+            >
+              <span class="range__chip" aria-hidden="true">
+                {l.colors.map((c) => (
+                  <i style={`background:${c}`} />
+                ))}
+              </span>
+              {l.label}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="range__frame nx" data-size="l" data-notch="br">
+      <div class="range__stage" id="range-stage" role="tabpanel" aria-labelledby={`range-tab-${first.id}`} data-inspect="Range stage / poster">
+        <div class="poster" data-lang={first.id} data-poster>
+          <canvas class="pz-wipe" aria-hidden="true" data-wipe></canvas>
+          <span class="pz-s pz-s1" data-flip aria-hidden="true"></span>
+          <span class="pz-s pz-s2" data-flip aria-hidden="true"></span>
+          <span class="pz-s pz-s3" data-flip aria-hidden="true"></span>
+          <p class="pz pz-prompt" data-flip aria-hidden="true">{POSTER.prompt}</p>
+          <p class="pz pz-kicker" data-flip>{POSTER.kicker}</p>
+          <p class="pz pz-title" data-flip>{POSTER.title}</p>
+          <p class="pz pz-line" data-flip>{POSTER.line}</p>
+          <ul class="pz pz-meta" role="list" data-flip>
+            {POSTER.meta.map((m) => <li>{m}</li>)}
+          </ul>
+          <span class="pz pz-cta" data-flip aria-hidden="true">{POSTER.cta}</span>
+          <span class="pz pz-num" data-flip aria-hidden="true">{POSTER.num}</span>
+        </div>
+      </div>
+    </div>
+
+    <dl class="range__spec" aria-live="polite" data-spec>
+      <div>
+        <dt>Type</dt>
+        <dd data-spec-type>{first.type}</dd>
+      </div>
+      <div>
+        <dt>Colour</dt>
+        <dd class="range__swatches" data-spec-colors>
+          {
+            first.colors.map((c) => (
+              <span>
+                <i style={`background:${c}`} />
+                {c}
+              </span>
+            ))
+          }
+        </dd>
+      </div>
+      <div>
+        <dt>Grid</dt>
+        <dd data-spec-grid>{first.grid}</dd>
+      </div>
+      <div class="range__note">
+        <dt class="sr-only">Idea</dt>
+        <dd data-spec-note>{first.note}</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<script type="application/json" data-range-json set:html={JSON.stringify(RANGE)} />
+
+<style>
+  .range {
+    position: relative;
+    padding-block: var(--s-24) var(--s-16);
+  }
+
+  .range__inner {
+    display: grid;
+    gap: var(--s-6);
+  }
+
+  .range__head {
+    display: grid;
+    gap: var(--s-3);
+    max-width: 60ch;
+  }
+
+  .range__title {
+    font-size: var(--step-5);
+    font-weight: 600;
+  }
+
+  .range__sub {
+    color: var(--ink-2);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .range__controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .range__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .range__tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 14px 0 10px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-2);
+    border: 1px solid var(--line);
+    transition:
+      color var(--d-1) var(--ease-out),
+      border-color var(--d-1) var(--ease-out);
+  }
+
+  .range__tab:hover {
+    color: var(--ink);
+    border-color: var(--line-strong);
+  }
+
+  .range__tab[aria-selected='true'] {
+    color: var(--ink);
+    border-color: var(--gold);
+  }
+
+  .range__chip {
+    display: grid;
+    grid-template-columns: repeat(3, 8px);
+    height: 18px;
+    gap: 1px;
+  }
+
+  .range__chip i {
+    display: block;
+    box-shadow: inset 0 0 0 1px rgb(var(--ink-rgb) / 0.12);
+  }
+
+
+  .range__frame {
+    --nx-line: var(--line-strong);
+    padding: 10px;
+  }
+
+  .range__stage {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    container-type: size;
+    overflow: hidden;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+  }
+
+  .range__spec {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.4fr);
+    gap: var(--s-3) var(--gutter);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--line);
+  }
+
+  .range__spec dt {
+    font-size: var(--step--1);
+    color: var(--ink-2);
+    margin-bottom: 4px;
+  }
+
+  .range__spec dd {
+    font-weight: 500;
+  }
+
+  .range__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    font-family: var(--font-dots);
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+
+  .range__swatches span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .range__swatches i {
+    width: 12px;
+    height: 12px;
+    box-shadow: inset 0 0 0 1px rgb(var(--ink-rgb) / 0.2);
+  }
+
+  .range__note dd {
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 900px) {
+    .range__spec {
+      grid-template-columns: 1fr 1fr;
+    }
+    .range__stage {
+      aspect-ratio: 16 / 10;
+    }
+  }
+</style>

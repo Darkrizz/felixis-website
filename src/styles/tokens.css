@@ -1,0 +1,108 @@
+/* Felixis design tokens. Colours come straight from the trademark files; spacing is the
+   mark's 6-unit cell; motion values mirror src/data/motion.ts. */
+
+:root {
+  /* brand constants */
+  --forest: #13201a;
+  --leaf-bright: #4cb27a;
+  --leaf-deep: #1f6b45;
+  --gold: #e8b422;
+  --paper: #eef1ea;
+
+  /* dark theme (default) */
+  --ground: #13201a;
+  --ground-rgb: 19 32 26;
+  --surface: #1a2b22;
+  --surface-2: #213429;
+  --ink: #eef1ea;
+  --ink-rgb: 238 241 234;
+  --ink-2: #9aaea1;
+  --leaf: #4cb27a;
+  --line: rgb(238 241 234 / 0.12);
+  --line-strong: rgb(238 241 234 / 0.24);
+  --focus: #eef1ea;
+  --on-gold: #13201a;
+  /* gold used as text: the brand gold on dark, a deeper gold that passes AA on paper */
+  --gold-text: #e8b422;
+  --mark-a: #4cb27a;
+  --mark-centre: #eef1ea;
+  --selection: rgb(232 180 34 / 0.32);
+  /* lowest word strength in the scrubbed statement (3:1 against the ground) */
+  --scrub-min: 0.4;
+  color-scheme: dark;
+
+  /* type */
+  --font-sans: var(--font-familjen), 'Familjen Grotesk', Arial, sans-serif;
+  --font-dots: var(--font-doto), 'Doto', ui-monospace, monospace;
+  --step--1: 0.875rem;
+  --step-0: 1.125rem;
+  --step-1: 1.375rem;
+  --step-2: clamp(1.5rem, 1.2rem + 0.9vw, 1.75rem);
+  --step-3: clamp(1.75rem, 1.3rem + 1.6vw, 2.25rem);
+  --step-4: clamp(2.125rem, 1.4rem + 2.6vw, 3rem);
+  --step-5: clamp(2.5rem, 1.5rem + 4vw, 4.25rem);
+  --step-6: clamp(2.75rem, 1.4rem + 5.6vw, 6rem);
+  --lh-body: 1.6;
+  --lh-tight: 1.02;
+  --track-display: -0.035em;
+  --measure: 66ch;
+
+  /* space: multiples of the 6px cell */
+  --u: 6px;
+  --s-1: 6px;
+  --s-2: 12px;
+  --s-3: 18px;
+  --s-4: 24px;
+  --s-6: 36px;
+  --s-8: 48px;
+  --s-12: 72px;
+  --s-16: 96px;
+  --s-24: 144px;
+  --gutter: 24px;
+  --margin: clamp(18px, 4vw, 72px);
+  --max: 1440px;
+  --nav-h: 72px;
+
+  /* notches: the leaf's missing corner cell */
+  --n-s: 6px;
+  --n-m: 12px;
+  --n-l: 24px;
+
+  /* motion */
+  --ease-glide: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-swing: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  --d-1: 120ms;
+  --d-2: 240ms;
+  --d-3: 360ms;
+  --d-4: 600ms;
+  --d-5: 1200ms;
+
+  /* layers */
+  --z-canvas: 0;
+  --z-content: 1;
+  --z-nav: 20;
+  --z-inspect: 30;
+  --z-cover: 40;
+  --z-preloader: 50;
+}
+
+:root[data-theme='light'] {
+  --ground: #eef1ea;
+  --ground-rgb: 238 241 234;
+  --surface: #e3e8df;
+  --surface-2: #d8dfd3;
+  --ink: #13201a;
+  --ink-rgb: 19 32 26;
+  --ink-2: #4a5c51;
+  --leaf: #1f6b45;
+  --line: rgb(19 32 26 / 0.14);
+  --line-strong: rgb(19 32 26 / 0.28);
+  --focus: #13201a;
+  --gold-text: #7a5a00;
+  --mark-a: #1f6b45;
+  --mark-centre: #13201a;
+  --selection: rgb(232 180 34 / 0.4);
+  --scrub-min: 0.56;
+  color-scheme: light;
+}

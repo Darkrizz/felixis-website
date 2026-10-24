@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256" role="img" aria-label="Felixis">
+  <!-- Hero version with visible pixel grid. Use at 120px and above. -->
+  <rect width="64" height="64" fill="#13201A"/>
+  <path d="M17 11 H29 V29 H11 V17 H17 Z" fill="#4CB27A"/>
+  <path d="M35 11 H47 V17 H53 V29 H35 Z" fill="#E8B422"/>
+  <path d="M11 35 H29 V53 H17 V47 H11 Z" fill="#4CB27A"/>
+  <path d="M35 35 H53 V47 H47 V53 H35 Z" fill="#4CB27A"/>
+  <rect x="29" y="29" width="6" height="6" fill="#EEF1EA"/>
+  <path d="M17 11 V53 M23 11 V53 M41 11 V53 M47 11 V53 M11 17 H53 M11 23 H53 M11 41 H53 M11 47 H53" stroke="#13201A" stroke-width="0.7" fill="none"/>
+</svg>

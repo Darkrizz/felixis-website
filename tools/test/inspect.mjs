@@ -1,0 +1,22 @@
+// Inspect mode check: turn it on with the I key, hover the hero title and a leaf panel.
+import path from 'node:path';
+import { launch, PROJECT } from '../cdp/chrome.mjs';
+const BASE = process.env.BASE || 'http://127.0.0.1:4411';
+const out = path.join(PROJECT, 'tools/out/inspect');
+const chrome = await launch({ gpu: 'hw' });
+const page = await chrome.newPage();
+await page.init({ width: 1440, height: 900 });
+await page.goto(`${BASE}/?fx-test`, 2500);
+await page.key('i', 'KeyI');
+await page.sleep(600);
+await page.move(300, 330);
+await page.sleep(500);
+await page.shot(path.join(out, 'hero.jpg'));
+const y = await page.eval(`(() => { const t = __fx.triggers().find((t) => t.id === 'leaves'); return Math.round(t.start + (t.end - t.start) * 0.3); })()`);
+await page.eval(`__fx.scrollTo(${y})`);
+await page.sleep(1200);
+await page.move(1000, 420);
+await page.sleep(500);
+await page.shot(path.join(out, 'leaves.jpg'));
+console.log('errors:', page.errors.length ? page.errors : 'none');
+await chrome.close();

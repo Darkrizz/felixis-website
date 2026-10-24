@@ -1,0 +1,177 @@
+---
+// The 33 cells of the mark as a step sequencer: columns are steps, rows are notes.
+import { CELLS } from '../../data/brand';
+import PixelIcon from '../ui/PixelIcon.astro';
+const NOTE = ['C6', 'A5', 'G5', 'E5', 'D5', 'C5', 'A4'];
+---
+
+<div class="seq" data-demo="sequencer">
+  <div class="seq__board">
+    <div class="seq__grid" role="group" aria-label="Sequencer cells. Each column is a step, each row a note.">
+      {
+        CELLS.map((cell) => (
+          <button
+            type="button"
+            class="seq__cell"
+            data-leaf={cell.leaf}
+            data-c={cell.c}
+            data-r={cell.r}
+            aria-pressed="false"
+            aria-label={`Step ${cell.c + 1}, note ${NOTE[cell.r]}`}
+            style={`grid-column:${cell.c + 1};grid-row:${cell.r + 1}`}
+          />
+        ))
+      }
+      <span class="seq__head" aria-hidden="true" data-head></span>
+    </div>
+  </div>
+  <div class="seq__tools">
+    <button class="seq__play nx" data-size="s" type="button" data-play aria-pressed="false"><PixelIcon name="play" class="i-play" /><PixelIcon name="pause" class="i-stop" /><span data-play-label>Play</span></button>
+    <label class="seq__tempo"><span>Tempo <output class="dots" data-bpm-out>112</output> bpm</span><input type="range" min="60" max="200" value="112" data-bpm /></label>
+    <button class="seq__btn" type="button" data-pattern="clover">Felixis pattern</button>
+    <button class="seq__btn" type="button" data-pattern="random">Random</button>
+    <button class="seq__btn" type="button" data-pattern="clear">Clear</button>
+  </div>
+  <p class="seq__note">Sound plays only after you press Play. Gold cells play a brighter tone.</p>
+</div>
+
+<style>
+  .seq {
+    display: grid;
+    gap: var(--s-4);
+  }
+
+  .seq__board {
+    display: grid;
+    place-items: center;
+    padding: var(--s-6) 0;
+  }
+
+  .seq__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    gap: 6px;
+    width: min(100%, 560px);
+    aspect-ratio: 1;
+  }
+
+  .seq__cell {
+    position: relative;
+    border: 2px solid var(--line-strong);
+    background: transparent;
+    transition: background-color var(--d-1) steps(2, jump-none), transform var(--d-1) var(--ease-out);
+  }
+
+  .seq__cell:hover {
+    border-color: var(--leaf);
+  }
+
+  .seq__cell[aria-pressed='true'] {
+    background: var(--leaf);
+    border-color: var(--leaf);
+  }
+
+  .seq__cell[data-leaf='design'][aria-pressed='true'] {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .seq__cell[data-leaf='centre'][aria-pressed='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .seq__cell.is-hit {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 4px rgb(var(--ink-rgb) / 0.2);
+  }
+
+  .seq__cell:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  .seq__head {
+    position: absolute;
+    top: -14px;
+    left: 0;
+    width: calc((100% - 36px) / 7);
+    height: 4px;
+    background: var(--gold);
+    transform: translateX(calc(var(--step, 0) * (100% + 6px)));
+    opacity: 0;
+  }
+
+  .seq.is-playing .seq__head {
+    opacity: 1;
+  }
+
+  .seq__tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2) var(--s-3);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--line);
+  }
+
+  .seq__play {
+    --nx-fill: var(--gold);
+    --nx-line: var(--gold);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 var(--s-4);
+    font-weight: 600;
+    color: var(--on-gold);
+  }
+
+  .seq__play :global(.i-stop),
+  .seq__play[aria-pressed='true'] :global(.i-play) {
+    display: none;
+  }
+  .seq__play[aria-pressed='true'] :global(.i-stop) {
+    display: block;
+  }
+
+  .seq__tempo {
+    display: grid;
+    gap: 4px;
+    flex: 1 1 200px;
+    max-width: 320px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .seq__tempo output {
+    color: var(--leaf);
+    font-size: 1rem;
+  }
+
+  .seq__tempo input {
+    accent-color: var(--leaf);
+    height: 22px;
+  }
+
+  .seq__btn {
+    min-height: 44px;
+    padding: 0 var(--s-2);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .seq__btn:hover {
+    color: var(--ink);
+  }
+
+  .seq__note {
+    font-size: 0.875rem;
+    color: var(--ink-2);
+  }
+</style>

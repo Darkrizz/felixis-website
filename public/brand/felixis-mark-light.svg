@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Felixis">
+  <!-- Pixel clover mark, for light backgrounds -->
+  <path d="M17 11 H29 V29 H11 V17 H17 Z" fill="#1F6B45"/>
+  <path d="M35 11 H47 V17 H53 V29 H35 Z" fill="#E8B422"/>
+  <path d="M11 35 H29 V53 H17 V47 H11 Z" fill="#1F6B45"/>
+  <path d="M35 35 H53 V47 H47 V53 H35 Z" fill="#1F6B45"/>
+  <rect x="29" y="29" width="6" height="6" fill="#13201A"/>
+</svg>

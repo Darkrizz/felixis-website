@@ -1,0 +1,44 @@
+---
+import Base from '../../layouts/Base.astro';
+import LabIndex from '../../components/sections/LabIndex.astro';
+import ContactBand from '../../components/sections/ContactBand.astro';
+---
+
+<Base
+  title="Lab: experiments in the browser | Felixis"
+  description="Six experiments built by Felixis: a voxel sandbox, a step sequencer made from the logo, a pixel mark maker, variable type, a cell shader and a flow field."
+  page="lab"
+  formation="dust"
+  crumbs={[{ name: 'Lab', path: '/lab/' }]}
+>
+  <section class="lab-hero" aria-labelledby="lab-h1">
+    <div class="wrap lab-hero__inner">
+      <h1 id="lab-h1" class="lab-hero__title" data-fx="weight-field" data-inspect="H1 / lab">The lab</h1>
+      <p class="lede">
+        Things we build to learn something, test a technique or just see what happens. Each one runs in your browser, works with a keyboard, and stays still if
+        you've asked your device for less motion.
+      </p>
+    </div>
+  </section>
+  <LabIndex full />
+  <ContactBand />
+</Base>
+
+<style>
+  .lab-hero {
+    padding-top: calc(var(--nav-h) + var(--s-16));
+    padding-bottom: var(--s-6);
+  }
+
+  .lab-hero__inner {
+    display: grid;
+    gap: var(--s-4);
+  }
+
+  .lab-hero__title {
+    font-size: clamp(4rem, 2rem + 10vw, 11rem);
+    font-weight: 700;
+    line-height: 0.85;
+    letter-spacing: -0.06em;
+  }
+</style>

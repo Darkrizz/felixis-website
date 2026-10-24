@@ -1,0 +1,49 @@
+---
+import { HOME } from '../../data/copy';
+---
+
+<section class="statement" aria-label="About the name" data-section="statement" data-pin="statement">
+  <div class="statement__lattice" data-voxel-anchor="statement" aria-hidden="true"></div>
+  <div class="statement__inner wrap grid">
+    <p class="statement__text" data-fx="scrub-words" data-inspect="Statement / scrubbed">
+      {HOME.statement}
+    </p>
+  </div>
+</section>
+
+<style>
+  .statement {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-block: var(--s-16);
+  }
+
+  .statement__lattice {
+    position: absolute;
+    inset: var(--s-8) var(--margin);
+    pointer-events: none;
+  }
+
+  .statement__text {
+    grid-column: 1 / span 11;
+    font-size: var(--step-5);
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    text-wrap: pretty;
+  }
+
+  /* Words light up as the section scrolls; without JS the text is simply full strength. */
+  .statement__text :global(.w) {
+    color: rgb(var(--ink-rgb) / calc(var(--scrub-min) + (1 - var(--scrub-min)) * var(--k, 1)));
+  }
+
+  @media (max-width: 767px) {
+    .statement__text {
+      grid-column: 1 / -1;
+      font-size: var(--step-4);
+    }
+  }
+</style>

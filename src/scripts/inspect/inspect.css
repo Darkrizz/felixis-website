@@ -1,0 +1,113 @@
+.ins {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-inspect);
+  pointer-events: none;
+}
+
+.ins__lattice {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgb(var(--ink-rgb) / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--ink-rgb) / 0.05) 1px, transparent 1px);
+  background-size: 6px 6px;
+  mask-image: radial-gradient(circle at var(--px, 50%) var(--py, 50%), #000 0, transparent 70%);
+}
+
+.ins__cols {
+  position: absolute;
+  inset: 0;
+}
+
+.ins__cols-in {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  height: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--margin);
+}
+
+.ins__cols span {
+  background: rgb(76 178 122 / 0.07);
+  border-inline: 1px solid rgb(76 178 122 / 0.25);
+}
+
+@media (max-width: 767px) {
+  .ins__cols-in {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    column-gap: var(--s-2);
+  }
+  .ins__cols span:nth-child(n + 7) {
+    display: none;
+  }
+}
+
+.ins__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ins__card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-width: 220px;
+  max-width: 340px;
+  padding: 10px 12px;
+  background: #0b130f;
+  color: #eef1ea;
+  border: 1px solid #e8b422;
+  font-size: 12px;
+  line-height: 1.45;
+  opacity: 0;
+  transition: opacity 120ms steps(2, jump-none);
+}
+
+.ins__card p {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  gap: 8px;
+}
+
+.ins__card span {
+  color: #9aaea1;
+}
+
+.ins__name {
+  display: block !important;
+  font-weight: 700;
+  color: #e8b422;
+  margin-bottom: 4px;
+}
+
+.ins__hud {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  translate: -50% 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 14px;
+  max-width: calc(100vw - 32px);
+  padding: 8px 14px;
+  background: #0b130f;
+  border: 1px solid #4cb27a;
+  color: #eef1ea;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.ins__hud b {
+  color: #e8b422;
+}
+
+.ins__key {
+  color: #9aaea1;
+}

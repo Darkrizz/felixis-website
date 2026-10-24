@@ -1,0 +1,137 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/ui/Button.astro';
+import { CELLS } from '../data/brand';
+---
+
+<Base title="Page not found | Felixis" description="This page doesn't exist." page="404" noindex formation="dust">
+  <section class="nf" aria-labelledby="nf-title">
+    <div class="wrap nf__inner">
+      <div class="nf__copy">
+        <p class="nf__code dots" aria-hidden="true">404</p>
+        <h1 id="nf-title" class="nf__title">The gold leaf wandered off.</h1>
+        <p class="lede">This page doesn't exist, and neither does a quarter of our clover right now. Catch the gold cell four times to put the leaf back, or head home.</p>
+        <div class="nf__actions">
+          <Button href="/" variant="gold">Back to the home page</Button>
+          <Button href="/lab/" variant="line">See the lab</Button>
+        </div>
+        <p class="nf__score" aria-live="polite" data-nf-score>0 of 4 caught</p>
+      </div>
+      <div class="nf__board" data-demo="lost" role="group" aria-label="Catch the gold cell">
+        {
+          CELLS.filter((c) => c.leaf !== 'design').map((c) => (
+            <span class="nf__cell" data-leaf={c.leaf} style={`grid-column:${c.c + 1};grid-row:${c.r + 1}`} />
+          ))
+        }
+        {
+          CELLS.filter((c) => c.leaf === 'design').map((c) => (
+            <span class="nf__slot" data-slot={c.seq} style={`grid-column:${c.c + 1};grid-row:${c.r + 1}`} />
+          ))
+        }
+        <button class="nf__gold" type="button" data-nf-gold aria-label="The gold cell. Press to catch it." style="grid-column:2;grid-row:4"></button>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-block: calc(var(--nav-h) + var(--s-8)) var(--s-12);
+  }
+
+  .nf__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    gap: var(--s-8) var(--gutter);
+    align-items: center;
+  }
+
+  .nf__copy {
+    display: grid;
+    gap: var(--s-4);
+    justify-items: start;
+  }
+
+  .nf__code {
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 1;
+    color: var(--gold-text);
+  }
+
+  .nf__title {
+    font-size: var(--step-5);
+    font-weight: 600;
+  }
+
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+
+  .nf__score {
+    font-weight: 600;
+    color: var(--ink-2);
+  }
+
+  .nf__board {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    gap: 4px;
+    width: min(100%, 460px);
+    aspect-ratio: 1;
+    justify-self: center;
+  }
+
+  .nf__cell {
+    background: var(--mark-a);
+  }
+
+  .nf__cell[data-leaf='centre'] {
+    background: var(--mark-centre);
+  }
+
+  .nf__slot {
+    border: 1px dashed var(--line-strong);
+    transition: background-color var(--d-2) steps(3, jump-end);
+  }
+
+  .nf__slot.is-filled {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .nf__gold {
+    background: var(--gold);
+    cursor: pointer;
+    z-index: 1;
+    transition: transform var(--d-1) var(--ease-out);
+  }
+
+  .nf__gold:hover {
+    transform: scale(1.08);
+  }
+
+  .nf__gold:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  .nf__gold[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .nf__inner {
+      grid-template-columns: 1fr;
+    }
+    .nf__board {
+      width: min(100%, 320px);
+      justify-self: start;
+    }
+  }
+</style>

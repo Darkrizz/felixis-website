@@ -1,0 +1,128 @@
+/* The notched square: a box missing one corner cell, exactly like a leaf of the mark.
+   The shape lives on pseudo-elements so the element's own outline, hit area and
+   forced-colours ring are never clipped.
+   ::before = the hairline, drawn as a ring (outer shape minus inner shape, evenodd)
+   ::after  = the fill (may be transparent)
+   Corner is chosen with data-notch (tl default, tr, bl, br). */
+
+.nx {
+  --n: var(--n-m);
+  --b: 1px;
+  --nx-line: var(--line-strong);
+  --nx-fill: transparent;
+  position: relative;
+  isolation: isolate;
+  /* fill shape */
+  --nx-poly: polygon(var(--n) 0, 100% 0, 100% 100%, 0 100%, 0 var(--n), var(--n) var(--n));
+  /* ring: outer path, then the inner path inset by --b */
+  --nx-ring: polygon(
+    evenodd,
+    var(--n) 0, 100% 0, 100% 100%, 0 100%, 0 var(--n), var(--n) var(--n), var(--n) 0,
+    calc(var(--n) + var(--b)) var(--b),
+    calc(var(--n) + var(--b)) calc(var(--n) + var(--b)),
+    var(--b) calc(var(--n) + var(--b)),
+    var(--b) calc(100% - var(--b)),
+    calc(100% - var(--b)) calc(100% - var(--b)),
+    calc(100% - var(--b)) var(--b),
+    calc(var(--n) + var(--b)) var(--b)
+  );
+}
+
+.nx::before,
+.nx::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  transition:
+    background-color var(--d-2) var(--ease-out),
+    inset var(--d-2) var(--ease-glide);
+}
+
+.nx::before {
+  clip-path: var(--nx-ring);
+  background: var(--nx-line);
+  z-index: 0;
+}
+
+.nx::after {
+  clip-path: var(--nx-poly);
+  background: var(--nx-fill);
+  z-index: -1;
+}
+
+.nx[data-notch='tr'] {
+  --nx-poly: polygon(0 0, calc(100% - var(--n)) 0, calc(100% - var(--n)) var(--n), 100% var(--n), 100% 100%, 0 100%);
+  --nx-ring: polygon(
+    evenodd,
+    0 0, calc(100% - var(--n)) 0, calc(100% - var(--n)) var(--n), 100% var(--n), 100% 100%, 0 100%, 0 0,
+    var(--b) var(--b),
+    var(--b) calc(100% - var(--b)),
+    calc(100% - var(--b)) calc(100% - var(--b)),
+    calc(100% - var(--b)) calc(var(--n) + var(--b)),
+    calc(100% - var(--n) - var(--b)) calc(var(--n) + var(--b)),
+    calc(100% - var(--n) - var(--b)) var(--b),
+    var(--b) var(--b)
+  );
+}
+
+.nx[data-notch='bl'] {
+  --nx-poly: polygon(0 0, 100% 0, 100% 100%, var(--n) 100%, var(--n) calc(100% - var(--n)), 0 calc(100% - var(--n)));
+  --nx-ring: polygon(
+    evenodd,
+    0 0, 100% 0, 100% 100%, var(--n) 100%, var(--n) calc(100% - var(--n)), 0 calc(100% - var(--n)), 0 0,
+    var(--b) var(--b),
+    var(--b) calc(100% - var(--n) - var(--b)),
+    calc(var(--n) + var(--b)) calc(100% - var(--n) - var(--b)),
+    calc(var(--n) + var(--b)) calc(100% - var(--b)),
+    calc(100% - var(--b)) calc(100% - var(--b)),
+    calc(100% - var(--b)) var(--b),
+    var(--b) var(--b)
+  );
+}
+
+.nx[data-notch='br'] {
+  --nx-poly: polygon(0 0, 100% 0, 100% calc(100% - var(--n)), calc(100% - var(--n)) calc(100% - var(--n)), calc(100% - var(--n)) 100%, 0 100%);
+  --nx-ring: polygon(
+    evenodd,
+    0 0, 100% 0, 100% calc(100% - var(--n)), calc(100% - var(--n)) calc(100% - var(--n)), calc(100% - var(--n)) 100%, 0 100%, 0 0,
+    var(--b) var(--b),
+    var(--b) calc(100% - var(--b)),
+    calc(100% - var(--n) - var(--b)) calc(100% - var(--b)),
+    calc(100% - var(--n) - var(--b)) calc(100% - var(--n) - var(--b)),
+    calc(100% - var(--b)) calc(100% - var(--n) - var(--b)),
+    calc(100% - var(--b)) var(--b),
+    var(--b) var(--b)
+  );
+}
+
+.nx[data-size='s'] {
+  --n: var(--n-s);
+}
+
+.nx[data-size='l'] {
+  --n: var(--n-l);
+}
+
+/* Focus ring: the hairline thickens, moves outward and takes the focus colour. */
+.nx:focus-visible {
+  --b: 2px;
+  outline: 2px solid transparent;
+}
+
+.nx:focus-visible::before {
+  inset: -4px;
+  background: var(--focus);
+}
+
+@media (forced-colors: active) {
+  .nx::before,
+  .nx::after {
+    display: none;
+  }
+
+  .nx {
+    border: 1px solid CanvasText;
+  }
+}

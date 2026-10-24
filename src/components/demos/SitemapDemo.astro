@@ -1,0 +1,100 @@
+---
+// Strategy demo: a sitemap that grows when you click a page. Layout and lines are drawn by
+// scripts/demos/sitemap.ts; without JS the static starting map below is shown.
+---
+
+<div class="sitemap" data-demo="sitemap" data-inspect="Demo / sitemap">
+  <svg class="sitemap__lines" aria-hidden="true"></svg>
+  <div class="sitemap__nodes" role="group" aria-label="Sitemap. Each page is a button that adds a child page.">
+    <span class="sitemap__static">Home · Services · Work · About · Contact</span>
+  </div>
+  <div class="sitemap__bar">
+    <p class="sitemap__count dots" aria-live="polite" data-count>5 pages</p>
+    <button type="button" class="sitemap__reset" data-reset>Reset</button>
+  </div>
+</div>
+
+<style>
+  .sitemap {
+    min-width: 0;
+    position: relative;
+    height: 100%;
+    min-height: 260px;
+    display: grid;
+    grid-template-rows: 1fr auto;
+  }
+
+  .sitemap__lines {
+    position: absolute;
+    inset: 0 0 44px 0;
+    width: 100%;
+    height: calc(100% - 44px);
+    pointer-events: none;
+  }
+
+  .sitemap__lines :global(path) {
+    fill: none;
+    stroke: var(--line-strong);
+    stroke-width: 1;
+  }
+
+  .sitemap__nodes {
+    position: relative;
+  }
+
+  .sitemap__static {
+    color: var(--ink-2);
+  }
+
+  .sitemap__nodes :global(.sm-node) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    min-height: 32px;
+    padding: 0 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    --nx-fill: var(--surface-2);
+    --n: 6px;
+    will-change: transform;
+  }
+
+  .sitemap__nodes :global(.sm-node[data-depth='0']) {
+    --nx-fill: var(--leaf);
+    color: var(--ground);
+  }
+
+  .sitemap__nodes :global(.sm-node.is-new) {
+    --nx-fill: var(--gold);
+    --nx-line: var(--gold);
+    color: var(--on-gold);
+  }
+
+  .sitemap__nodes :global(.sm-node:hover) {
+    --nx-line: var(--ink);
+  }
+
+  .sitemap__bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 44px;
+    border-top: 1px solid var(--line);
+  }
+
+  .sitemap__count {
+    font-size: 1rem;
+    color: var(--leaf);
+  }
+
+  .sitemap__reset {
+    min-height: 44px;
+    padding: 0 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ink-2);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+</style>

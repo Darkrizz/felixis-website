@@ -1,0 +1,183 @@
+---
+// Development demo: one card component, three layouts, chosen purely by container queries.
+// The slider only changes the container's width; the layouts are CSS.
+---
+
+<div class="cq" data-demo="container" data-cls-sandbox data-inspect="Demo / container queries">
+  <div class="cq__stage">
+    <div class="cq__box" data-box style="--w: 72%">
+      <article class="cq__card">
+        <div class="cq__media" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <div class="cq__body">
+          <p class="cq__title">Spring collection</p>
+          <p class="cq__text">Same markup at every width. The layout comes from the space it's given.</p>
+        </div>
+        <dl class="cq__stats">
+          <div><dt>Items</dt><dd class="dots">24</dd></div>
+          <div><dt>Colours</dt><dd class="dots">6</dd></div>
+          <div><dt>Sizes</dt><dd class="dots">5</dd></div>
+        </dl>
+      </article>
+      <span class="cq__handle" aria-hidden="true"></span>
+    </div>
+  </div>
+  <label class="cq__control">
+    <span>Container width <output class="dots" data-w-out>-</output> <span class="cq__mode" data-mode></span></span>
+    <input type="range" min="30" max="100" value="72" data-w />
+  </label>
+</div>
+
+<style>
+  .cq {
+    min-width: 0;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: var(--s-3);
+    height: 100%;
+    min-height: 280px;
+  }
+
+  .cq__stage {
+    position: relative;
+    contain: strict;
+    min-height: 220px;
+    background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 12px 12px;
+  }
+
+  .cq__box {
+    container-type: inline-size;
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--w);
+    padding: 12px;
+    border-right: 2px solid var(--leaf);
+    background: rgb(var(--ground-rgb) / 0.86);
+  }
+
+  .cq__handle {
+    position: absolute;
+    right: -7px;
+    top: 50%;
+    width: 12px;
+    height: 36px;
+    translate: 0 -50%;
+    background: var(--leaf);
+  }
+
+  .cq__card {
+    display: grid;
+    gap: 12px;
+    height: 100%;
+    align-content: start;
+  }
+
+  .cq__media {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px;
+    height: 64px;
+  }
+
+  .cq__media span {
+    background: var(--leaf);
+    opacity: 0.85;
+  }
+  .cq__media span:nth-child(2) {
+    background: var(--gold);
+  }
+  .cq__media span:nth-child(3) {
+    opacity: 0.55;
+  }
+  .cq__media span:nth-child(4) {
+    opacity: 0.3;
+  }
+
+  .cq__title {
+    font-weight: 700;
+    font-size: 1.125rem;
+    letter-spacing: -0.02em;
+  }
+
+  .cq__text {
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--ink-2);
+    margin-top: 4px;
+  }
+
+  .cq__stats {
+    display: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .cq__stats div {
+    padding: 8px;
+    background: var(--surface-2);
+  }
+
+  .cq__stats dt {
+    font-size: 0.75rem;
+    color: var(--ink-2);
+  }
+
+  .cq__stats dd {
+    font-size: 1.375rem;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+
+  @container (min-width: 300px) {
+    .cq__card {
+      grid-template-columns: 120px 1fr;
+      align-items: start;
+    }
+    .cq__media {
+      grid-template-columns: repeat(2, 1fr);
+      height: 120px;
+    }
+  }
+
+  @container (min-width: 460px) {
+    .cq__card {
+      grid-template-columns: 150px 1fr;
+    }
+    .cq__media {
+      height: 150px;
+    }
+    .cq__stats {
+      display: grid;
+      grid-column: 2;
+    }
+    .cq__title {
+      font-size: 1.5rem;
+    }
+  }
+
+  .cq__control {
+    display: grid;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .cq__control output {
+    font-size: 1rem;
+    color: var(--leaf);
+    margin-inline: 6px;
+  }
+
+  .cq__mode {
+    color: var(--ink-2);
+    font-weight: 500;
+  }
+
+  .cq__control input {
+    width: 100%;
+    height: 24px;
+    accent-color: var(--leaf);
+  }
+</style>

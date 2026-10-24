@@ -1,0 +1,423 @@
+---
+import Base from '../layouts/Base.astro';
+import Clover from '../components/brand/Clover.astro';
+import { site, formEndpoint } from '../data/site.config.mjs';
+
+const KINDS = ['New website', 'Redesign', 'Brand identity', 'Web app', 'Motion and 3D', 'Search and speed', 'Not sure yet'];
+const WHEN = ['As soon as possible', 'In 1 to 3 months', 'In 3 to 6 months', 'No fixed date'];
+const STEPS = ['What', 'When', 'Who', 'Details'];
+// FormSubmit: with JavaScript the brief goes to the AJAX endpoint; without it, the form posts
+// straight to FormSubmit, which shows its own thank-you page. While the inbox is still a
+// placeholder the form falls back to a prefilled email.
+const endpoint = formEndpoint();
+const action = endpoint ? endpoint.replace('/ajax/', '/') : `mailto:${site.email}`;
+---
+
+<Base title="Start a project with Felixis Web Solutions" description="Tell Felixis what you are making in four short steps. The brief goes straight to the studio's inbox." page="start" formation="flatclover" crumbs={[{ name: 'Start a project', path: '/start/' }]}>
+  <section class="start" aria-labelledby="start-title">
+    <div class="wrap start__inner">
+      <div class="start__side">
+        <h1 id="start-title" class="start__title" data-inspect="H1 / start">Start a project</h1>
+        <p class="start__lede">Four short steps. Each one you finish grows a leaf of the clover, and the brief goes straight to our inbox at the end.</p>
+        <div class="start__mark" data-voxel-anchor="start">
+          <Clover tight class="start__svg" data-start-svg />
+        </div>
+        <ol class="start__steps" role="list" aria-label="Progress" data-progress-list>
+          {
+            STEPS.map((s, i) => (
+              <li data-step-dot={i} aria-current={i === 0 ? 'step' : undefined}>
+                <span class="dots">{i + 1}</span> {s}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <form class="brief" method="post" action={action} enctype={endpoint ? undefined : 'text/plain'} data-brief data-demo="brief" novalidate data-endpoint={endpoint ?? ''} data-email={site.email}>
+        <input type="hidden" name="_subject" value="New project brief from felixis website" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_captcha" value="false" />
+        <p class="brief__hp" aria-hidden="true">
+          <label>Leave this empty <input type="text" name="_honey" tabindex="-1" autocomplete="off" /></label>
+        </p>
+
+        <fieldset class="brief__step is-current" data-step="0">
+          <legend class="brief__q">What are we making?</legend>
+          <p class="brief__hint" id="hint-kind">Pick as many as you like.</p>
+          <div class="brief__chips" aria-describedby="hint-kind err-kind">
+            {
+              KINDS.map((k) => (
+                <label class="chip">
+                  <input type="checkbox" name="kind" value={k} />
+                  <span>{k}</span>
+                </label>
+              ))
+            }
+          </div>
+          <p class="brief__err" id="err-kind" data-err="kind"></p>
+        </fieldset>
+
+        <fieldset class="brief__step" data-step="1">
+          <legend class="brief__q">When do you need it?</legend>
+          <div class="brief__chips" aria-describedby="err-when">
+            {
+              WHEN.map((w) => (
+                <label class="chip">
+                  <input type="radio" name="when" value={w} />
+                  <span>{w}</span>
+                </label>
+              ))
+            }
+          </div>
+          <p class="brief__err" id="err-when" data-err="when"></p>
+          <label class="field">
+            <span>Rough budget, if you have one <em>(optional)</em></span>
+            <input type="text" name="budget" autocomplete="off" />
+          </label>
+        </fieldset>
+
+        <fieldset class="brief__step" data-step="2">
+          <legend class="brief__q">Who are we talking to?</legend>
+          <label class="field">
+            <span>Your name</span>
+            <input type="text" name="name" autocomplete="name" required aria-describedby="err-name" />
+            <span class="brief__err" id="err-name" data-err="name"></span>
+          </label>
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required aria-describedby="err-email" />
+            <span class="brief__err" id="err-email" data-err="email"></span>
+          </label>
+          <label class="field">
+            <span>Company or project <em>(optional)</em></span>
+            <input type="text" name="company" autocomplete="organization" />
+          </label>
+          <label class="field">
+            <span>Current website <em>(optional)</em></span>
+            <input type="url" name="site" autocomplete="url" placeholder="https://" />
+          </label>
+        </fieldset>
+
+        <fieldset class="brief__step" data-step="3">
+          <legend class="brief__q">Tell us more</legend>
+          <label class="field">
+            <span>What should the new site do that the current one can't?</span>
+            <textarea name="details" rows="6" required aria-describedby="err-details"></textarea>
+            <span class="brief__err" id="err-details" data-err="details"></span>
+          </label>
+        </fieldset>
+
+        <div class="brief__done" data-done hidden tabindex="-1">
+          <h2 class="brief__q">That's the clover.</h2>
+          <p data-done-text>Thanks. Your brief is with us now, and you will be contacted soon.</p>
+          <pre class="brief__copy" data-done-copy hidden></pre>
+          <button class="brief__copybtn" type="button" data-copy hidden>Copy the brief</button>
+        </div>
+
+        <div class="brief__nav" data-nav>
+          <button class="brief__back" type="button" data-back hidden>Back</button>
+          <button class="brief__next nx" data-size="s" type="button" data-next>Next</button>
+          <button class="brief__send nx" data-size="s" type="submit" data-send>Send the brief</button>
+        </div>
+        <p class="brief__status" aria-live="polite" data-status></p>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .start {
+    padding-top: calc(var(--nav-h) + var(--s-12));
+    padding-bottom: var(--s-16);
+  }
+
+  .start__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--s-8) var(--gutter);
+    align-items: start;
+  }
+
+  .start__side {
+    position: sticky;
+    top: calc(var(--nav-h) + var(--s-4));
+    display: grid;
+    gap: var(--s-4);
+  }
+
+  .start__title {
+    font-size: var(--step-6);
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+  }
+
+  .start__lede {
+    color: var(--ink-2);
+    max-width: 40ch;
+  }
+
+  .start__mark {
+    width: min(100%, 260px);
+    aspect-ratio: 1;
+  }
+
+  .start__svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .start__svg :global(.clover__cell.is-off) {
+    fill: var(--surface-2);
+  }
+
+  :global(html.gl-ready) .start__svg {
+    opacity: 0;
+  }
+
+  .start__steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+
+  .start__steps li[aria-current='step'] {
+    color: var(--ink);
+  }
+
+  .start__steps li.is-done .dots {
+    color: var(--leaf);
+  }
+
+  .start__steps .dots {
+    font-size: 1.0625rem;
+    margin-right: 4px;
+  }
+
+  /* ---------- form ---------- */
+  .brief {
+    display: grid;
+    gap: var(--s-4);
+    padding: var(--s-6);
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+  }
+
+  .brief__hp {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .brief__step {
+    display: grid;
+    gap: var(--s-3);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  :global(html.js) .brief__step:not(.is-current) {
+    display: none;
+  }
+
+  .brief__step.is-current {
+    animation: step-in var(--d-3) steps(4, jump-end) both;
+  }
+
+  @keyframes step-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+
+  .brief__q {
+    font-size: var(--step-3);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    padding: 0;
+    margin-bottom: var(--s-1);
+  }
+
+  .brief__hint {
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+  }
+
+  .brief__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip {
+    position: relative;
+  }
+
+  .chip input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 18px;
+    border: 1px solid var(--line-strong);
+    font-weight: 600;
+    transition:
+      background-color var(--d-1) steps(2, jump-none),
+      color var(--d-1) steps(2, jump-none);
+  }
+
+  .chip input:checked + span {
+    background: var(--ink);
+    color: var(--ground);
+    border-color: var(--ink);
+  }
+
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .field {
+    display: grid;
+    gap: 6px;
+    font-weight: 600;
+  }
+
+  .field em {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--ink-2);
+  }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    background: var(--ground);
+    border: 1px solid var(--line-strong);
+    font-weight: 400;
+    resize: vertical;
+  }
+
+  .field input::placeholder {
+    color: var(--ink-2);
+  }
+
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+  }
+
+  .field input[aria-invalid='true'],
+  .field textarea[aria-invalid='true'] {
+    border-color: var(--gold);
+  }
+
+  .brief__err {
+    min-height: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--gold-text);
+  }
+
+  .brief__err:empty {
+    display: none;
+  }
+
+  .brief__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--line);
+  }
+
+  .brief__back {
+    min-height: 44px;
+    padding: 0 8px;
+    font-weight: 600;
+    color: var(--ink-2);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .brief__next,
+  .brief__send {
+    margin-left: auto;
+    min-height: 48px;
+    padding: 0 var(--s-4);
+    font-weight: 600;
+  }
+
+  .brief__send {
+    --nx-fill: var(--gold);
+    --nx-line: var(--gold);
+    color: var(--on-gold);
+  }
+
+  :global(html.js) .brief__send:not(.is-shown),
+  .brief__next.is-hidden {
+    display: none;
+  }
+
+  :global(html:not(.js)) .brief__next {
+    display: none;
+  }
+
+  .brief__status {
+    min-height: 1.6em;
+    color: var(--ink-2);
+  }
+
+  .brief__done {
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .brief__copy {
+    margin: 0;
+    padding: var(--s-3);
+    background: var(--ground);
+    white-space: pre-wrap;
+    font-size: 0.875rem;
+    max-height: 260px;
+    overflow: auto;
+  }
+
+  .brief__copybtn {
+    justify-self: start;
+    min-height: 44px;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 960px) {
+    .start__inner {
+      grid-template-columns: 1fr;
+    }
+    .start__side {
+      position: relative;
+      top: auto;
+    }
+    .start__mark {
+      width: 160px;
+    }
+    .brief {
+      padding: var(--s-4);
+    }
+  }
+</style>

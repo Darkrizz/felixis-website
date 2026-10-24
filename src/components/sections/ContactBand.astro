@@ -1,0 +1,53 @@
+---
+import { HOME, NAV } from '../../data/copy';
+import Button from '../ui/Button.astro';
+---
+
+<section class="band" aria-labelledby="band-title" data-section="contact">
+  <div class="wrap band__inner">
+    <h2 id="band-title" class="band__title" data-inspect="H2 / closing">{HOME.contact.title}</h2>
+    <div class="band__side">
+      <p class="band__sub">{HOME.contact.sub}</p>
+      <Button href="/start/" variant="gold" magnetic>{NAV.cta}</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .band {
+    position: relative;
+    padding-block: var(--s-16) var(--s-24);
+  }
+
+  .band__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: var(--s-6) var(--gutter);
+    align-items: end;
+  }
+
+  .band__title {
+    font-size: var(--step-6);
+    font-weight: 600;
+    line-height: 0.96;
+    letter-spacing: -0.045em;
+    max-width: 13em;
+  }
+
+  .band__side {
+    display: grid;
+    gap: var(--s-4);
+    justify-items: start;
+  }
+
+  .band__sub {
+    color: var(--ink-2);
+    max-width: 34ch;
+  }
+
+  @media (max-width: 900px) {
+    .band__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,136 @@
+---
+// Growth demo: type in your own numbers; the funnel shows where the biggest gain is.
+const STEPS = [
+  { key: 'visit', label: 'Visit the site', value: 4000, unit: 'a month' },
+  { key: 'service', label: 'Open a service page', value: 38, unit: '%' },
+  { key: 'start', label: 'Start the contact form', value: 12, unit: '%' },
+  { key: 'send', label: 'Send it', value: 55, unit: '%' },
+];
+---
+
+<div class="fun" data-demo="funnel" data-inspect="Demo / funnel">
+  <fieldset class="fun__inputs">
+    <legend>Your numbers (example values, change them)</legend>
+    {
+      STEPS.map((s, i) => (
+        <label>
+          <span>{s.label}</span>
+          <span class="fun__field">
+            <input type="number" inputmode="numeric" min="0" max={i === 0 ? 10000000 : 100} step={i === 0 ? 100 : 1} value={s.value} data-step={s.key} />
+            <span>{s.unit}</span>
+          </span>
+        </label>
+      ))
+    }
+  </fieldset>
+  <div class="fun__out">
+    <ol class="fun__bars" role="list" data-bars></ol>
+    <p class="fun__tip" aria-live="polite" data-tip></p>
+  </div>
+</div>
+
+<style>
+  .fun {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: var(--s-6);
+    min-width: 0;
+  }
+
+  .fun__inputs {
+    display: grid;
+    gap: var(--s-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .fun__inputs legend {
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    margin-bottom: var(--s-2);
+  }
+
+  .fun__inputs label {
+    display: grid;
+    gap: 4px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .fun__field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+
+  .fun__field input {
+    width: 140px;
+    min-height: 44px;
+    padding: 0 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--line-strong);
+    font-family: var(--font-dots);
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: var(--ink);
+  }
+
+  .fun__field input:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+  }
+
+  .fun__bars {
+    display: grid;
+    gap: 6px;
+  }
+
+  .fun__bars :global(li) {
+    display: grid;
+    gap: 4px;
+  }
+
+  .fun__bars :global(.fun__row) {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .fun__bars :global(.fun__n) {
+    font-family: var(--font-dots);
+    font-size: 1rem;
+    color: var(--leaf);
+  }
+
+  .fun__bars :global(.fun__bar) {
+    height: 24px;
+    background: var(--leaf);
+    transform-origin: left;
+    transition: transform var(--d-4) var(--ease-glide);
+  }
+
+  .fun__bars :global(li.is-leak .fun__bar) {
+    background: var(--gold);
+  }
+
+  .fun__bars :global(li.is-leak .fun__n) {
+    color: var(--gold-text);
+  }
+
+  .fun__tip {
+    margin-top: var(--s-3);
+    padding: var(--s-3);
+    background: var(--surface-2);
+    border-left: 3px solid var(--gold);
+  }
+
+  @media (max-width: 860px) {
+    .fun {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

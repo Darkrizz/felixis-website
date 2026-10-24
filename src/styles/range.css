@@ -1,0 +1,584 @@
+/* The Range poster: one DOM, six art directions. Every element is absolutely placed so
+   GSAP Flip can carry it from one language's layout to the next. Sizes are in cqw
+   (the stage is a size container), so each poster scales as a single picture. */
+
+.poster {
+  --bg: #f1f0eb;
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  color: #111;
+  overflow: hidden;
+}
+
+.pz-wipe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.pz,
+.pz-s {
+  position: absolute;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.pz-s {
+  display: block;
+}
+
+.pz-meta {
+  display: flex;
+  gap: 1.6cqw;
+  list-style: none;
+}
+
+.pz-prompt {
+  opacity: 0;
+}
+
+/* ============================== SWISS ============================== */
+.poster[data-lang='swiss'] {
+  --bg: #f1f0eb;
+  color: #111;
+  font-family: 'Range Swiss', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 500;
+}
+[data-lang='swiss'] .pz-s1 {
+  left: 60%;
+  top: 9%;
+  width: 31cqw;
+  height: 31cqw;
+  border-radius: 50%;
+  background: #e4002b;
+}
+[data-lang='swiss'] .pz-s2 {
+  left: 5%;
+  top: 57%;
+  width: 90%;
+  height: 0.5cqw;
+  background: #111;
+}
+[data-lang='swiss'] .pz-s3 {
+  left: 5%;
+  top: 8%;
+  width: 6cqw;
+  height: 0.5cqw;
+  background: #111;
+}
+[data-lang='swiss'] .pz-kicker {
+  left: 5%;
+  top: 11%;
+  font-size: max(9px, 1.6cqw);
+}
+[data-lang='swiss'] .pz-title {
+  left: 4.2%;
+  top: 19%;
+  font-size: 17.5cqw;
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 0.82;
+}
+[data-lang='swiss'] .pz-line {
+  left: 5%;
+  top: 63%;
+  font-size: max(10px, 2.5cqw);
+  white-space: normal;
+  width: 36%;
+  line-height: 1.15;
+}
+[data-lang='swiss'] .pz-meta {
+  left: 52%;
+  top: 63%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4cqw 3cqw;
+  font-size: max(9px, 1.5cqw);
+}
+[data-lang='swiss'] .pz-num {
+  left: 5%;
+  top: 78%;
+  font-size: 10cqw;
+  font-weight: 900;
+  color: #e4002b;
+  letter-spacing: -0.05em;
+}
+[data-lang='swiss'] .pz-cta {
+  left: 73%;
+  top: 84%;
+  padding: 0.9cqw 1.4cqw;
+  font-size: max(9px, 1.4cqw);
+  background: #111;
+  color: #f1f0eb;
+}
+
+/* ============================== EDITORIAL ============================== */
+.poster[data-lang='editorial'] {
+  --bg: #f4efe4;
+  color: #1c1a16;
+  font-family: 'Range Editorial', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+}
+[data-lang='editorial'] .pz-s1 {
+  left: 6%;
+  top: 15%;
+  width: 88%;
+  height: 0.18cqw;
+  background: #1c1a16;
+}
+[data-lang='editorial'] .pz-s2 {
+  left: 6%;
+  top: 79%;
+  width: 88%;
+  height: 0.18cqw;
+  background: #1c1a16;
+}
+[data-lang='editorial'] .pz-s3 {
+  left: 6%;
+  top: 16.2%;
+  width: 88%;
+  height: 0.08cqw;
+  background: #1c1a16;
+}
+[data-lang='editorial'] .pz-kicker {
+  left: 6%;
+  width: 88%;
+  text-align: center;
+  top: 7%;
+  font-size: max(9px, 1.5cqw);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-style: normal;
+}
+[data-lang='editorial'] .pz-title {
+  left: 6%;
+  width: 88%;
+  text-align: center;
+  top: 19%;
+  font-size: 19cqw;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #1f6b45;
+}
+[data-lang='editorial'] .pz-line {
+  left: 6%;
+  width: 88%;
+  text-align: center;
+  top: 60%;
+  font-size: max(11px, 3cqw);
+}
+[data-lang='editorial'] .pz-meta {
+  left: 6%;
+  top: 83%;
+  width: 88%;
+  justify-content: space-between;
+  font-size: max(9px, 1.4cqw);
+  font-style: normal;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+[data-lang='editorial'] .pz-num {
+  left: 89%;
+  top: 7%;
+  font-size: max(9px, 1.5cqw);
+  font-style: normal;
+  letter-spacing: 0.1em;
+}
+[data-lang='editorial'] .pz-cta {
+  left: 6%;
+  width: 88%;
+  text-align: center;
+  top: 70%;
+  font-size: max(9px, 1.6cqw);
+  color: #1f6b45;
+  text-decoration: underline;
+  text-decoration-thickness: 0.12cqw;
+  text-underline-offset: 0.5cqw;
+}
+
+/* ============================== BRUTALIST ============================== */
+.poster[data-lang='brutalist'] {
+  --bg: #ffffff;
+  color: #000;
+  font-family: 'Range Brutalist', 'Courier New', monospace;
+  font-weight: 400;
+}
+[data-lang='brutalist'] .pz-s1 {
+  left: 3%;
+  top: 5%;
+  width: 94%;
+  height: 90%;
+  border: 0.5cqw solid #000;
+  background: transparent;
+}
+[data-lang='brutalist'] .pz-s2 {
+  left: 5.5%;
+  top: 21%;
+  width: 60%;
+  height: 25%;
+  background: #ffe500;
+  border: 0.35cqw solid #000;
+}
+[data-lang='brutalist'] .pz-s3 {
+  left: 69%;
+  top: 21%;
+  width: 25.5%;
+  height: 25%;
+  background: #000;
+}
+[data-lang='brutalist'] .pz-kicker {
+  left: 5.5%;
+  top: 10%;
+  padding: 0.5cqw 1cqw;
+  font-size: max(9px, 1.5cqw);
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #000;
+  color: #fff;
+}
+[data-lang='brutalist'] .pz-title {
+  left: 7%;
+  top: 23%;
+  font-size: 11.5cqw;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+[data-lang='brutalist'] .pz-line {
+  left: 5.5%;
+  top: 52%;
+  font-size: max(10px, 2.2cqw);
+  font-weight: 700;
+}
+[data-lang='brutalist'] .pz-meta {
+  left: 5.5%;
+  top: 64%;
+  gap: 0;
+  font-size: max(9px, 1.5cqw);
+}
+[data-lang='brutalist'] .pz-meta li {
+  padding: 0.6cqw 1.1cqw;
+  border: 0.3cqw solid #000;
+  margin-right: -0.3cqw;
+}
+[data-lang='brutalist'] .pz-num {
+  left: 72%;
+  top: 22%;
+  font-size: 12cqw;
+  font-weight: 700;
+  color: #ffe500;
+}
+[data-lang='brutalist'] .pz-cta {
+  left: 5.5%;
+  top: 81%;
+  font-size: max(10px, 2cqw);
+  font-weight: 700;
+  color: #0000ee;
+  text-decoration: underline;
+  text-decoration-thickness: 0.25cqw;
+  text-underline-offset: 0.4cqw;
+}
+
+/* ============================== GLASS ============================== */
+.poster[data-lang='glass'] {
+  --bg: #0e1512;
+  color: #fff;
+  font-family: 'Range Glass', 'Segoe UI', sans-serif;
+  font-weight: 300;
+}
+[data-lang='glass'] .pz-s1 {
+  left: 6%;
+  top: 2%;
+  width: 40cqw;
+  height: 40cqw;
+  border-radius: 50%;
+  background: #4cb27a;
+  filter: blur(4cqw);
+  opacity: 0.85;
+}
+[data-lang='glass'] .pz-s2 {
+  left: 60%;
+  top: 38%;
+  width: 28cqw;
+  height: 28cqw;
+  border-radius: 50%;
+  background: #e8b422;
+  filter: blur(4cqw);
+  opacity: 0.8;
+}
+[data-lang='glass'] .pz-s3 {
+  left: 13%;
+  top: 14%;
+  width: 74%;
+  height: 72%;
+  border-radius: 2.4cqw;
+  background: rgb(255 255 255 / 0.09);
+  border: 1px solid rgb(255 255 255 / 0.26);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    0 3cqw 6cqw rgb(0 0 0 / 0.35);
+  backdrop-filter: blur(2.2cqw) saturate(1.4);
+  -webkit-backdrop-filter: blur(2.2cqw) saturate(1.4);
+}
+[data-lang='glass'] .pz-kicker {
+  left: 18%;
+  top: 22%;
+  font-size: max(9px, 1.35cqw);
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.75);
+}
+[data-lang='glass'] .pz-title {
+  left: 17.4%;
+  top: 28%;
+  font-size: 11cqw;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}
+[data-lang='glass'] .pz-line {
+  left: 18%;
+  top: 53%;
+  font-size: max(10px, 2.1cqw);
+  color: rgb(255 255 255 / 0.85);
+}
+[data-lang='glass'] .pz-meta {
+  left: 18%;
+  top: 63%;
+  gap: 0.8cqw;
+  font-size: max(9px, 1.25cqw);
+  font-weight: 500;
+}
+[data-lang='glass'] .pz-meta li {
+  padding: 0.5cqw 1.2cqw;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.12);
+  border: 1px solid rgb(255 255 255 / 0.2);
+}
+[data-lang='glass'] .pz-num {
+  left: 76%;
+  top: 22%;
+  font-size: max(9px, 1.35cqw);
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.75);
+}
+[data-lang='glass'] .pz-cta {
+  left: 18%;
+  top: 73.5%;
+  padding: 0.9cqw 2cqw;
+  border-radius: 999px;
+  font-size: max(9px, 1.35cqw);
+  font-weight: 500;
+  background: #fff;
+  color: #0e1512;
+}
+
+/* ============================== TERMINAL ============================== */
+.poster[data-lang='terminal'] {
+  --bg: #07100b;
+  color: #4cb27a;
+  font-family: var(--font-dots);
+  font-weight: 700;
+  font-variation-settings: 'ROND' 0;
+}
+[data-lang='terminal'] .pz-s1 {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at 50% 45%, rgb(76 178 122 / 0.12), transparent 70%);
+}
+[data-lang='terminal'] .pz-s2 {
+  left: 47.5%;
+  top: 25.6%;
+  width: 4.6cqw;
+  height: 9cqw;
+  background: #4cb27a;
+  animation: pz-caret 1s steps(1, jump-end) infinite;
+  box-shadow: 0 0 1.5cqw rgb(76 178 122 / 0.6);
+}
+[data-lang='terminal'] .pz-s3 {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.28) 0 2px, transparent 2px 4px);
+  z-index: 2;
+}
+[data-lang='terminal'] .pz-prompt {
+  opacity: 1;
+  left: 5%;
+  top: 8%;
+  font-size: max(10px, 2cqw);
+  color: #e8b422;
+}
+[data-lang='terminal'] .pz-kicker {
+  left: 5%;
+  top: 15%;
+  font-size: max(10px, 1.8cqw);
+}
+[data-lang='terminal'] .pz-kicker::before {
+  content: '> ';
+}
+[data-lang='terminal'] .pz-title {
+  left: 4.4%;
+  top: 23%;
+  font-size: 9.8cqw;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 0 1.2cqw rgb(76 178 122 / 0.55);
+}
+[data-lang='terminal'] .pz-line {
+  left: 5%;
+  top: 50%;
+  font-size: max(10px, 2.2cqw);
+  color: #b9e6c9;
+}
+[data-lang='terminal'] .pz-meta {
+  left: 5%;
+  top: 58%;
+  display: grid;
+  gap: 0.3cqw;
+  font-size: max(9px, 1.7cqw);
+}
+[data-lang='terminal'] .pz-meta li::before {
+  content: '[ok] ';
+  color: #e8b422;
+}
+[data-lang='terminal'] .pz-num {
+  left: 89%;
+  top: 8%;
+  font-size: max(10px, 2cqw);
+}
+[data-lang='terminal'] .pz-cta {
+  left: 5%;
+  top: 86%;
+  font-size: max(10px, 2cqw);
+  color: #eef1ea;
+}
+[data-lang='terminal'] .pz-cta::after {
+  content: '_';
+  animation: pz-caret 1s steps(1, jump-end) infinite;
+}
+
+@keyframes pz-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ============================== SOFT 3D ============================== */
+.poster[data-lang='soft'] {
+  --bg: #ede7ff;
+  color: #3d2e9c;
+  font-family: 'Range Soft', 'Arial Rounded MT Bold', sans-serif;
+  font-weight: 700;
+}
+[data-lang='soft'] .pz-s1 {
+  left: 58%;
+  top: 8%;
+  width: 30cqw;
+  height: 30cqw;
+  border-radius: 50%;
+  background: #9ee6c8;
+  box-shadow:
+    inset -2cqw -2.4cqw 3cqw rgb(31 107 69 / 0.28),
+    inset 1.6cqw 1.6cqw 2.4cqw rgb(255 255 255 / 0.7),
+    0 2.4cqw 4cqw rgb(61 46 156 / 0.22);
+}
+[data-lang='soft'] .pz-s2 {
+  left: 6%;
+  top: 64%;
+  width: 46%;
+  height: 15%;
+  border-radius: 999px;
+  background: #ffe7a3;
+  box-shadow:
+    inset -1cqw -1.4cqw 2cqw rgb(180 120 0 / 0.25),
+    inset 1cqw 1cqw 1.6cqw rgb(255 255 255 / 0.8),
+    0 1.6cqw 3cqw rgb(61 46 156 / 0.18);
+}
+[data-lang='soft'] .pz-s3 {
+  left: 72%;
+  top: 56%;
+  width: 17%;
+  height: 30%;
+  border-radius: 3.4cqw 6cqw 3.4cqw 6cqw;
+  background: #ffc4dd;
+  box-shadow:
+    inset -1.4cqw -1.6cqw 2cqw rgb(180 40 100 / 0.22),
+    inset 1cqw 1cqw 1.6cqw rgb(255 255 255 / 0.8),
+    0 2cqw 3.6cqw rgb(61 46 156 / 0.2);
+}
+[data-lang='soft'] .pz-kicker {
+  left: 7%;
+  top: 11%;
+  font-size: max(9px, 1.6cqw);
+  color: #6b5bd2;
+}
+[data-lang='soft'] .pz-title {
+  left: 6%;
+  top: 17%;
+  font-size: 15cqw;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-shadow:
+    0.25cqw 0.25cqw 0 #c9bdff,
+    0.5cqw 0.5cqw 0 #b3a4fb,
+    0.75cqw 0.75cqw 0 #9d8cf2,
+    1.1cqw 1.6cqw 2cqw rgb(61 46 156 / 0.3);
+}
+[data-lang='soft'] .pz-line {
+  left: 7%;
+  top: 50%;
+  font-size: max(10px, 2.4cqw);
+  color: #5a4fb0;
+}
+[data-lang='soft'] .pz-meta {
+  left: 9%;
+  top: 68.6%;
+  gap: 0.8cqw;
+  font-size: max(9px, 1.35cqw);
+  color: #7a5a00;
+}
+[data-lang='soft'] .pz-meta li {
+  padding: 0.4cqw 1cqw;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.6);
+}
+[data-lang='soft'] .pz-num {
+  left: 67%;
+  top: 17%;
+  font-size: 10cqw;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0.5cqw 1.4cqw rgb(31 107 69 / 0.35);
+}
+[data-lang='soft'] .pz-cta {
+  left: 66%;
+  top: 87%;
+  padding: 1cqw 2.2cqw;
+  border-radius: 999px;
+  font-size: max(9px, 1.4cqw);
+  background: #3d2e9c;
+  color: #fff;
+  box-shadow:
+    inset 0 -0.4cqw 0 rgb(0 0 0 / 0.25),
+    0 1.2cqw 2.4cqw rgb(61 46 156 / 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-lang='terminal'] .pz-s2,
+  [data-lang='terminal'] .pz-cta::after {
+    animation: none;
+  }
+}

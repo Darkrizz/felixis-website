@@ -1,0 +1,40 @@
+---
+// Icons drawn on the same 7x7 cell matrix as the mark, so UI glyphs and the logo share one pixel.
+const BITMAPS = {
+  theme: ['..###..', '.#..##.', '#...###', '#...###', '#...###', '.#..##.', '..###..'],
+  'sound-on': ['.......', '..#...#', '###.#.#', '###.#.#', '###.#.#', '..#...#', '.......'],
+  'sound-off': ['.......', '..#....', '###.#.#', '###..#.', '###.#.#', '..#....', '.......'],
+  inspect: ['##...##', '#.....#', '.......', '...#...', '.......', '#.....#', '##...##'],
+  menu: ['.......', '#######', '.......', '#######', '.......', '#######', '.......'],
+  close: ['#.....#', '.#...#.', '..#.#..', '...#...', '..#.#..', '.#...#.', '#.....#'],
+  arrow: ['...#...', '....#..', '.....#.', '#######', '.....#.', '....#..', '...#...'],
+  motion: ['.......', '#.#.#.#', '.......', '#######', '.......', '#.#.#.#', '.......'],
+  play: ['.#.....', '.##....', '.###...', '.####..', '.###...', '.##....', '.#.....'],
+  pause: ['.......', '.##.##.', '.##.##.', '.##.##.', '.##.##.', '.##.##.', '.......'],
+  plus: ['.......', '...#...', '...#...', '.#####.', '...#...', '...#...', '.......'],
+} as const;
+
+type IconName = keyof typeof BITMAPS;
+
+interface Props {
+  name: IconName;
+  class?: string;
+  size?: number;
+}
+
+const { name, class: cls, size = 14 } = Astro.props;
+const rows: readonly string[] = BITMAPS[name as IconName];
+const cells: [number, number][] = [];
+rows.forEach((row: string, r: number) => [...row].forEach((ch, c) => ch === '#' && cells.push([c, r])));
+---
+
+<svg class:list={['pixel-icon', cls]} viewBox="0 0 7 7" width={size} height={size} aria-hidden="true" focusable="false" shape-rendering="crispEdges">
+  {cells.map(([c, r]) => <rect x={c} y={r} width="1.02" height="1.02" />)}
+</svg>
+
+<style>
+  .pixel-icon {
+    fill: currentColor;
+    flex: none;
+  }
+</style>

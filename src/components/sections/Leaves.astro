@@ -1,0 +1,386 @@
+---
+import Clover from '../brand/Clover.astro';
+import SitemapDemo from '../demos/SitemapDemo.astro';
+import PaletteDemo from '../demos/PaletteDemo.astro';
+import ContainerDemo from '../demos/ContainerDemo.astro';
+import SnippetDemo from '../demos/SnippetDemo.astro';
+import { SERVICES } from '../../data/services';
+import { HOME } from '../../data/copy';
+
+const NOTCH = ['tl', 'tr', 'bl', 'br'];
+const DEMOS = { strategy: SitemapDemo, design: PaletteDemo, development: ContainerDemo, growth: SnippetDemo };
+---
+
+<section id="leaves" class="leaves" aria-labelledby="leaves-title" data-section="leaves" data-pin="leaves">
+  <div class="leaves__inner wrap">
+    <div class="leaves__side">
+      <h2 id="leaves-title" class="leaves__title" data-inspect="H2 / section">{HOME.leaves.title}</h2>
+      <p class="leaves__sub">{HOME.leaves.sub}</p>
+      <div class="leaves__clover" data-voxel-anchor="leaves" data-inspect="Voxel anchor / progress clover">
+        <Clover tight class="leaves__svg" data-lit-svg />
+      </div>
+      <p class="leaves__step" data-step><span class="dots" data-step-n>00</span><span data-step-name>Four stages, one clover</span></p>
+    </div>
+
+    <div class="leaves__grid" data-leaves-grid data-active="-1">
+      {
+        SERVICES.map((s, i) => {
+          const Demo = DEMOS[s.key];
+          return (
+            <article class="leaf nx" data-notch={NOTCH[i]} data-size="l" data-leaf={s.key} data-i={i} aria-labelledby={`leaf-${s.key}-name`} data-inspect={`Leaf / ${s.name}`}>
+              <h3 class="leaf__h">
+                <button class="leaf__head" type="button" data-leaf-btn={i} aria-expanded="false" aria-controls={`leaf-${s.key}-body`}>
+                  <span class="leaf__n dots">{s.n}</span>
+                  <span class="leaf__name" id={`leaf-${s.key}-name`}>
+                    {s.name}
+                  </span>
+                </button>
+              </h3>
+              <p class="leaf__line">{s.line}</p>
+              <ul class="leaf__includes" role="list" aria-label={`${s.name} includes`}>
+                {s.includes.map((x) => (
+                  <li>{x}</li>
+                ))}
+              </ul>
+              <div class="leaf__body" id={`leaf-${s.key}-body`} tabindex="-1">
+                <div class="leaf__demo">
+                  <Demo />
+                </div>
+                <div class="leaf__foot">
+                  <p class="leaf__hint">{s.demoLabel}</p>
+                  <a class="leaf__more" href={s.href}>
+                    {s.more}
+                  </a>
+                </div>
+              </div>
+            </article>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .leaves {
+    position: relative;
+    padding-block: var(--s-12);
+  }
+
+  .leaves__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: var(--s-6) var(--gutter);
+  }
+
+  .leaves__side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    min-height: 0;
+  }
+
+  .leaves__title {
+    font-size: var(--step-4);
+    font-weight: 600;
+  }
+
+  .leaves__sub {
+    color: var(--ink-2);
+    max-width: 34ch;
+  }
+
+  .leaves__clover {
+    width: min(100%, 300px);
+    aspect-ratio: 1;
+    margin-top: auto;
+  }
+
+  .leaves__svg {
+    width: 100%;
+    height: 100%;
+    transition: opacity var(--d-2) steps(3, jump-end);
+  }
+
+  .leaves__svg :global(.clover__cell.is-off) {
+    fill: var(--surface-2);
+  }
+
+  :global(html.gl-ready) .leaves__svg {
+    opacity: 0;
+  }
+
+  .leaves__step {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-weight: 600;
+    min-height: 1.6em;
+  }
+
+  .leaves__step .dots {
+    font-size: 1.375rem;
+    color: var(--leaf);
+  }
+
+  /* ---------- the clover of panels ---------- */
+  .leaves__grid {
+    --c1: minmax(0, 1fr);
+    --c2: minmax(0, 1fr);
+    --r1: minmax(0, 1fr);
+    --r2: minmax(0, 1fr);
+    min-height: 0;
+    display: grid;
+    grid-template-columns: var(--c1) var(--c2);
+    grid-template-rows: var(--r1) var(--r2);
+    gap: var(--s-2);
+    transition:
+      grid-template-columns var(--d-4) var(--ease-glide),
+      grid-template-rows var(--d-4) var(--ease-glide);
+  }
+
+  .leaf {
+    --nx-fill: var(--surface);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    padding: var(--s-4);
+    overflow: hidden;
+  }
+
+  .leaf[data-leaf='design'] {
+    --nx-line: rgb(232 180 34 / 0.5);
+  }
+
+  .leaf__h {
+    font-size: inherit;
+    letter-spacing: 0;
+  }
+
+  .leaf__head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    width: 100%;
+    min-height: 44px;
+    text-align: left;
+  }
+
+  .leaf__n {
+    font-size: 1.25rem;
+    color: var(--leaf);
+  }
+
+  .leaf[data-leaf='design'] .leaf__n {
+    color: var(--gold-text);
+  }
+
+  .leaf__name {
+    font-size: var(--step-3);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .leaf__line {
+    margin-top: var(--s-2);
+    color: var(--ink-2);
+    max-width: 42ch;
+  }
+
+  .leaf__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: var(--s-3);
+    flex: 1;
+    min-height: 0;
+    margin-top: var(--s-3);
+  }
+
+  .leaf__includes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: var(--s-3);
+  }
+
+  .leaf__includes li {
+    padding: 4px 10px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-2);
+  }
+
+  .leaf__demo {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .leaf__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--s-2) var(--s-4);
+    padding-top: var(--s-2);
+    border-top: 1px solid var(--line);
+  }
+
+  .leaf__hint {
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+
+  .leaf__more {
+    font-weight: 600;
+    font-size: 0.9375rem;
+    white-space: nowrap;
+    padding-block: 10px;
+  }
+
+  /* ---------- pinned desktop states (set by scripts/pages/home.ts) ---------- */
+  :global(html.js) .leaves.is-pinned {
+    padding-block: 0;
+  }
+
+  :global(html.js) .leaves.is-pinned .leaves__inner {
+    height: 100svh;
+    grid-template-rows: minmax(0, 1fr);
+    padding-top: calc(var(--nav-h) + var(--s-3));
+    padding-bottom: var(--s-6);
+  }
+
+  :global(html.js) .leaves.is-pinned .leaf__body,
+  :global(html.js) .leaves.is-pinned .leaf__line {
+    transition:
+      opacity var(--d-2) steps(3, jump-end),
+      visibility 0s linear var(--d-2);
+  }
+
+  /* overview: names, lines and what each leaf includes; no demos */
+  :global(html.js) .leaves.is-pinned .leaf__body {
+    position: absolute;
+    inset: auto var(--s-4) var(--s-4) var(--s-4);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  :global(html.js) .leaves.is-pinned .leaf__includes {
+    margin-top: auto;
+    transition: opacity var(--d-2) steps(3, jump-end);
+  }
+
+  :global(html.js) .leaves.is-pinned .leaf.is-active .leaf__includes,
+  :global(html.js) .leaves.is-pinned .leaf.is-small .leaf__includes {
+    display: none;
+  }
+
+  :global(html.js) .leaves.is-pinned .leaf.is-active .leaf__body {
+    position: relative;
+    inset: auto;
+  }
+
+  /* Inside the pinned panel the demo gets whatever height is left and never spills
+     over the footer: demos drop their standalone minimum heights and clip. */
+  :global(html.js) .leaves.is-pinned .leaf__demo {
+    overflow: hidden;
+  }
+
+  :global(html.js) .leaves.is-pinned .leaf__demo :global(.cq),
+  :global(html.js) .leaves.is-pinned .leaf__demo :global(.cq__stage),
+  :global(html.js) .leaves.is-pinned .leaf__demo :global(.sitemap) {
+    min-height: 0;
+  }
+
+  /* very short screens: the snippet keeps its title field and preview (the full tool is on /growth/) */
+  @media (max-height: 820px) {
+    :global(html.js) .leaves.is-pinned .leaf__demo :global(.snip__fields label:nth-child(2)),
+    :global(html.js) .leaves.is-pinned .leaf__demo :global(.palette__sample) {
+      display: none;
+    }
+    :global(html.js) .leaves.is-pinned .leaves__clover {
+      width: min(100%, 300px, 38vh);
+    }
+  }
+
+  /* short screens: the one-liner is already shown in the overview, so give its room to the demo */
+  @media (max-height: 920px) {
+    :global(html.js) .leaves.is-pinned .leaf.is-active .leaf__line {
+      display: none;
+    }
+    :global(html.js) .leaves.is-pinned .leaf.is-active .leaf__body {
+      margin-top: var(--s-2);
+    }
+  }
+
+  /* active leaf: everything */
+  :global(html.js) .leaves.is-pinned .leaf.is-active .leaf__body {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0.22s, 0s;
+  }
+
+  :global(html.js) .leaves.is-pinned .leaf.is-active {
+    --nx-line: var(--leaf);
+  }
+
+  :global(html.js) .leaves.is-pinned .leaf.is-active[data-leaf='design'] {
+    --nx-line: var(--gold);
+  }
+
+  /* shrunk leaves: number and name only */
+  :global(html.js) .leaves.is-pinned .leaf.is-small .leaf__line {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  :global(html.js) .leaves.is-pinned .leaf.is-small .leaf__name {
+    font-size: var(--step-1);
+  }
+
+  :global(html.js) .leaves.is-pinned .leaf.is-small {
+    padding: var(--s-3);
+  }
+
+  :global(html.js) .leaves.is-pinned .leaf:not(.is-done):not(.is-active) .leaf__n {
+    color: var(--ink-2);
+  }
+
+  /* unpinned desktop (reduced motion, short screens): the clover stays beside the panels */
+  @media (min-width: 1024px) {
+    .leaves:not(.is-pinned) .leaves__side {
+      position: sticky;
+      top: calc(var(--nav-h) + var(--s-3));
+      align-self: start;
+    }
+    .leaves:not(.is-pinned) .leaves__clover {
+      margin-top: var(--s-3);
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .leaves__inner {
+      grid-template-columns: 1fr;
+    }
+    .leaves__side {
+      position: sticky;
+      top: var(--nav-h);
+    }
+    .leaves__clover {
+      width: 160px;
+      margin-top: 0;
+    }
+    .leaves__grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: none;
+    }
+    .leaves__side {
+      position: relative;
+      top: auto;
+    }
+  }
+</style>

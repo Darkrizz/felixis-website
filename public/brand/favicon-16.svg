@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16">
+  <!-- Favicon tuned for 16px: larger leaves, tighter gaps -->
+  <rect width="64" height="64" rx="10" fill="#13201A"/>
+  <path d="M17 8 H30 V30 H8 V17 H17 Z" fill="#4CB27A"/>
+  <path d="M34 8 H47 V17 H56 V30 H34 Z" fill="#E8B422"/>
+  <path d="M8 34 H30 V56 H17 V47 H8 Z" fill="#4CB27A"/>
+  <path d="M34 34 H56 V47 H47 V56 H34 Z" fill="#4CB27A"/>
+</svg>

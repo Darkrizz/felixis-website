@@ -1,0 +1,173 @@
+---
+// Strategy demo: drag your brand across two axes; the territory describes itself.
+---
+
+<div class="pos" data-demo="positioning" data-inspect="Demo / positioning map">
+  <div class="pos__map" data-map>
+    <span class="pos__axis pos__axis--x" aria-hidden="true"><span>Quiet</span><span>Loud</span></span>
+    <span class="pos__axis pos__axis--y" aria-hidden="true"><span>Experimental</span><span>Classic</span></span>
+    <span class="pos__quad" data-q="0" aria-hidden="true"></span>
+    <span class="pos__quad" data-q="1" aria-hidden="true"></span>
+    <span class="pos__quad" data-q="2" aria-hidden="true"></span>
+    <span class="pos__quad" data-q="3" aria-hidden="true"></span>
+    <button class="pos__dot" type="button" data-dot aria-label="Your brand. Use the arrow keys to move it." style="--x:0.3;--y:0.62"></button>
+  </div>
+  <div class="pos__read">
+    <p class="pos__title" data-pos-title aria-live="polite"></p>
+    <p class="pos__text" data-pos-text></p>
+    <dl class="pos__tokens">
+      <div><dt>Motion</dt><dd data-pos-motion></dd></div>
+      <div><dt>Type contrast</dt><dd data-pos-type></dd></div>
+      <div><dt>Colour</dt><dd data-pos-colour></dd></div>
+    </dl>
+  </div>
+</div>
+
+<style>
+  .pos {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--s-6);
+    align-items: center;
+    min-width: 0;
+  }
+
+  .pos__map {
+    position: relative;
+    aspect-ratio: 1;
+    border: 1px solid var(--line-strong);
+    background:
+      linear-gradient(var(--line), var(--line)) center / 1px 100% no-repeat,
+      linear-gradient(var(--line), var(--line)) center / 100% 1px no-repeat;
+    touch-action: none;
+    cursor: crosshair;
+  }
+
+  .pos__axis {
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-2);
+    pointer-events: none;
+  }
+
+  .pos__axis--x {
+    left: 10px;
+    right: 10px;
+    top: calc(50% + 6px);
+  }
+
+  .pos__axis--y {
+    top: 8px;
+    bottom: 8px;
+    left: calc(50% + 8px);
+    flex-direction: column;
+  }
+
+  .pos__quad {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    background: var(--leaf);
+    opacity: 0;
+    transition: opacity var(--d-2) steps(3, jump-end);
+  }
+  .pos__quad[data-q='0'] {
+    left: 0;
+    top: 0;
+  }
+  .pos__quad[data-q='1'] {
+    right: 0;
+    top: 0;
+  }
+  .pos__quad[data-q='2'] {
+    left: 0;
+    bottom: 0;
+  }
+  .pos__quad[data-q='3'] {
+    right: 0;
+    bottom: 0;
+  }
+  .pos__quad.is-on {
+    opacity: 0.12;
+  }
+
+  .pos__dot {
+    position: absolute;
+    left: calc(var(--x) * 100%);
+    top: calc(var(--y) * 100%);
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    background: var(--gold);
+    box-shadow: 0 0 0 6px rgb(232 180 34 / 0.18);
+    cursor: grab;
+  }
+
+  .pos__dot:active {
+    cursor: grabbing;
+  }
+
+  .pos__dot:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 6px;
+  }
+
+  .pos__read {
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .pos__title {
+    font-size: var(--step-2);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .pos__text {
+    color: var(--ink-2);
+  }
+
+  .pos__tokens {
+    display: grid;
+    gap: 6px;
+    margin-top: var(--s-2);
+    padding-top: var(--s-2);
+    border-top: 1px solid var(--line);
+  }
+
+  .pos__tokens div {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: baseline;
+  }
+
+  .pos__tokens dt {
+    font-size: 0.875rem;
+    color: var(--ink-2);
+  }
+
+  .pos__tokens dd {
+    display: flex;
+    gap: 3px;
+  }
+
+  .pos__tokens dd :global(i) {
+    width: 12px;
+    height: 12px;
+    background: var(--surface-2);
+    transition: background-color var(--d-1) steps(2, jump-none);
+  }
+
+  .pos__tokens dd :global(i.on) {
+    background: var(--leaf);
+  }
+
+  @media (max-width: 760px) {
+    .pos {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

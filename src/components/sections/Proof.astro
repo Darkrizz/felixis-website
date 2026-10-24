@@ -1,0 +1,190 @@
+---
+import { HOME } from '../../data/copy';
+import Clover from '../brand/Clover.astro';
+import Button from '../ui/Button.astro';
+
+const READOUTS = [
+  { key: 'lcp', label: 'Largest paint', unit: 's', note: 'When the biggest thing on screen finished drawing' },
+  { key: 'cls', label: 'Layout shift', unit: '', note: 'How much the page jumped while loading (0 is perfect)' },
+  { key: 'weight', label: 'Transferred', unit: 'kB', note: 'Bytes over the network, compressed' },
+  { key: 'requests', label: 'Requests', unit: '', note: 'Files the browser fetched, this page included' },
+  { key: 'fps', label: 'Frame rate', unit: 'fps', note: 'Measured live while you read this' },
+  { key: 'voxels', label: 'Cubes on the GPU', unit: '', note: 'Drawn in one call every frame' },
+  { key: 'dom', label: 'DOM elements', unit: '', note: 'Everything the page is made of' },
+  { key: 'js', label: 'Script, compressed', unit: 'kB', note: 'All the JavaScript loaded so far' },
+];
+---
+
+<section id="proof" class="proof" aria-labelledby="proof-title" data-section="proof" data-demo="proof">
+  <div class="wrap proof__inner">
+    <div class="proof__side">
+      <h2 id="proof-title" class="proof__title" data-inspect="H2 / section">{HOME.proof.title}</h2>
+      <p class="proof__sub">{HOME.proof.sub}</p>
+      <div class="proof__mark" data-voxel-anchor="proof">
+        <Clover tight solid class="proof__svg" />
+      </div>
+      <p class="proof__inspect proof__desk">{HOME.proof.inspect}</p>
+      <div class="proof__actions">
+        <Button variant="line" size="s" data-ctl="inspect" class="proof__inspect-btn proof__desk">{HOME.proof.inspectCta}</Button>
+        <Button variant="plain" size="s" data-remeasure>{HOME.proof.remeasure}</Button>
+      </div>
+    </div>
+
+    <dl class="proof__grid" data-inspect="Readouts / live metrics">
+      {
+        READOUTS.map((r) => (
+          <div class="proof__cell" data-readout={r.key}>
+            <dt>{r.label}</dt>
+            <dd class="proof__value">
+              <span class="dots" data-value>
+                -
+              </span>
+              {r.unit && <span class="proof__unit">{r.unit}</span>}
+            </dd>
+            <dd class="proof__note">{r.note}</dd>
+            {r.key === 'fps' && <canvas class="proof__spark" aria-hidden="true" data-spark />}
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .proof {
+    position: relative;
+    padding-block: var(--s-16);
+  }
+
+  .proof__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--s-8) var(--gutter);
+    align-items: start;
+  }
+
+  .proof__side {
+    display: grid;
+    gap: var(--s-3);
+    justify-items: start;
+  }
+
+  .proof__title {
+    font-size: var(--step-5);
+    font-weight: 600;
+  }
+
+  .proof__sub,
+  .proof__inspect {
+    color: var(--ink-2);
+    max-width: 46ch;
+  }
+
+  .proof__mark {
+    width: 180px;
+    aspect-ratio: 1;
+    margin-block: var(--s-3);
+  }
+
+  .proof__svg {
+    width: 100%;
+    height: 100%;
+    transition: opacity var(--d-2) steps(3, jump-end);
+  }
+
+  :global(html.gl-ready) .proof__svg {
+    opacity: 0;
+  }
+
+  .proof__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+
+  .proof__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+  }
+
+  .proof__cell {
+    position: relative;
+    display: grid;
+    gap: 4px;
+    align-content: start;
+    padding: var(--s-3) var(--s-3) var(--s-4) 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .proof__cell:nth-child(odd) {
+    border-right: 1px solid var(--line);
+  }
+
+  .proof__cell:nth-child(even) {
+    padding-left: var(--s-3);
+  }
+
+  .proof__cell dt {
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .proof__value {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-height: 1.2em;
+  }
+
+  .proof__value .dots {
+    font-size: clamp(2.25rem, 1.5rem + 2vw, 3.25rem);
+    line-height: 1;
+    color: var(--leaf);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .proof__unit {
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+
+  .proof__note {
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    max-width: 30ch;
+  }
+
+  .proof__spark {
+    position: absolute;
+    right: var(--s-3);
+    top: var(--s-3);
+    width: 96px;
+    height: 32px;
+  }
+
+  /* Inspect needs a mouse to hover with; the nav hides it below 1100px, so does this */
+  @media (max-width: 1100px) {
+    .proof__side :global(.proof__desk) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .proof__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .proof__grid {
+      grid-template-columns: 1fr;
+    }
+    .proof__cell:nth-child(odd) {
+      border-right: 0;
+    }
+    .proof__cell:nth-child(even) {
+      padding-left: 0;
+    }
+  }
+</style>

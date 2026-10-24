@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: 'Familjen';
+        src: url('../node_modules/@fontsource-variable/familjen-grotesk/files/familjen-grotesk-latin-wght-normal.woff2') format('woff2');
+        font-weight: 400 700;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+        background: #13201a;
+        color: #eef1ea;
+        font-family: 'Familjen', Arial, sans-serif;
+        overflow: hidden;
+      }
+      .card {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        box-sizing: border-box;
+        padding: 72px 80px;
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        align-items: center;
+        gap: 40px;
+        background-image: radial-gradient(circle, rgb(238 241 234 / 0.08) 1.2px, transparent 1.6px);
+        background-size: 24px 24px;
+      }
+      .word {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        font-size: 44px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+      .word svg {
+        width: 52px;
+        height: 52px;
+      }
+      h1 {
+        margin: 40px 0 0;
+        font-size: 92px;
+        line-height: 0.95;
+        letter-spacing: -0.045em;
+        font-weight: 600;
+      }
+      p {
+        margin: 28px 0 0;
+        font-size: 28px;
+        color: #9aaea1;
+      }
+      .mark svg {
+        width: 380px;
+        height: 380px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div>
+        <div class="word">
+          <svg viewBox="11 11 42 42"><path d="M17 11 H29 V29 H11 V17 H17 Z" fill="#4CB27A" /><path d="M35 11 H47 V17 H53 V29 H35 Z" fill="#E8B422" /><path d="M11 35 H29 V53 H17 V47 H11 Z" fill="#4CB27A" /><path d="M35 35 H53 V47 H47 V53 H35 Z" fill="#4CB27A" /><rect x="29" y="29" width="6" height="6" fill="#EEF1EA" /></svg>
+          Felixis
+        </div>
+        <h1>Luck has nothing to do with it.</h1>
+        <p>Websites, brands and web apps by Felixis Web Solutions</p>
+      </div>
+      <div class="mark">
+        <svg viewBox="0 0 64 64">
+          <path d="M17 11 H29 V29 H11 V17 H17 Z" fill="#4CB27A" />
+          <path d="M35 11 H47 V17 H53 V29 H35 Z" fill="#E8B422" />
+          <path d="M11 35 H29 V53 H17 V47 H11 Z" fill="#4CB27A" />
+          <path d="M35 35 H53 V47 H47 V53 H35 Z" fill="#4CB27A" />
+          <rect x="29" y="29" width="6" height="6" fill="#EEF1EA" />
+          <path d="M17 11 V53 M23 11 V53 M41 11 V53 M47 11 V53 M11 17 H53 M11 23 H53 M11 41 H53 M11 47 H53" stroke="#13201A" stroke-width="0.7" fill="none" />
+        </svg>
+      </div>
+    </div>
+  </body>
+</html>

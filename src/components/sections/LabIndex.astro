@@ -1,0 +1,168 @@
+---
+// Lab teaser: six experiments, each with a live miniature that runs only on hover or focus.
+import { LAB } from '../../data/lab';
+import { HOME } from '../../data/copy';
+import Button from '../ui/Button.astro';
+
+interface Props {
+  /** full = the /lab/ page (heading level and intro change) */
+  full?: boolean;
+}
+const { full = false } = Astro.props;
+const Heading = full ? 'h2' : 'h3';
+---
+
+<section class:list={['lab', { 'lab--full': full }]} aria-labelledby={full ? undefined : 'lab-title'} aria-label={full ? 'Experiments' : undefined} data-section="lab">
+  <div class="wrap">
+    {
+      !full && (
+        <header class="lab__head">
+          <h2 id="lab-title" class="lab__title" data-inspect="H2 / section">
+            {HOME.lab.title}
+          </h2>
+          <p class="lab__sub">{HOME.lab.sub}</p>
+          <Button href="/lab/" variant="line" size="s">
+            {HOME.lab.cta}
+          </Button>
+        </header>
+      )
+    }
+    <ul class="lab__grid" role="list" data-demo="lab-thumbs">
+      {
+        LAB.map((x, i) => (
+          <li class={`lab__item lab__item--${i}`}>
+            <a class="lab__card nx" data-notch={i % 2 ? 'tr' : 'tl'} href={`/lab/${x.slug}/`} data-thumb={x.slug} data-inspect={`Lab card / ${x.title}`}>
+              <canvas class="lab__thumb" aria-hidden="true" />
+              <span class="lab__meta">
+                <Heading class="lab__name">{x.title}</Heading>
+                <span class="lab__line">{x.line}</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .lab {
+    position: relative;
+    padding-block: var(--s-16);
+  }
+
+  .lab__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: var(--s-3) var(--gutter);
+    margin-bottom: var(--s-6);
+  }
+
+  .lab__title {
+    font-size: var(--step-5);
+    font-weight: 600;
+    grid-column: 1;
+  }
+
+  .lab__sub {
+    grid-column: 1;
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+
+  .lab__head :global(.btn) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: end;
+  }
+
+  .lab__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-auto-rows: minmax(0, auto);
+    gap: var(--s-2);
+  }
+
+  /* asymmetric: two large, four small, in a rhythm that never repeats a row */
+  .lab__item--0 {
+    grid-column: span 7;
+  }
+  .lab__item--1 {
+    grid-column: span 5;
+  }
+  .lab__item--2,
+  .lab__item--3,
+  .lab__item--4 {
+    grid-column: span 4;
+  }
+  .lab__item--5 {
+    grid-column: span 12;
+  }
+
+  .lab__card {
+    --nx-fill: var(--surface);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+  .lab__card:hover,
+  .lab__card:focus-visible {
+    --nx-line: var(--leaf);
+  }
+
+  .lab__thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--surface-2);
+    clip-path: var(--nx-poly);
+  }
+
+  .lab__item--5 .lab__thumb {
+    aspect-ratio: 32 / 7;
+  }
+
+  .lab__meta {
+    display: grid;
+    gap: 4px;
+    padding: var(--s-3) var(--s-4) var(--s-4);
+  }
+
+  .lab__name {
+    font-size: var(--step-2);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .lab__line {
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+
+  @media (max-width: 900px) {
+    .lab__head {
+      grid-template-columns: 1fr;
+    }
+    .lab__head :global(.btn) {
+      grid-column: 1;
+      grid-row: auto;
+      justify-self: start;
+    }
+    .lab__item--0,
+    .lab__item--1,
+    .lab__item--2,
+    .lab__item--3,
+    .lab__item--4,
+    .lab__item--5 {
+      grid-column: span 12;
+    }
+    .lab__item--5 .lab__thumb {
+      aspect-ratio: 16 / 9;
+    }
+  }
+</style>

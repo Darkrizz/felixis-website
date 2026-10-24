@@ -1,0 +1,386 @@
+---
+import Clover from '../brand/Clover.astro';
+import Button from '../ui/Button.astro';
+import PixelIcon from '../ui/PixelIcon.astro';
+import { NAV } from '../../data/copy';
+---
+
+<header class="nav" data-nav>
+  <div class="nav__bar wrap">
+    <a class="nav__brand" href="/" aria-label="Felixis, home" data-inspect="Brand / lockup">
+      <Clover class="nav__clover" tight data-progress />
+      <span class="nav__word" aria-hidden="true">Felixis</span>
+    </a>
+
+    <nav class="nav__main" aria-label="Main">
+      <ul role="list" class="nav__links">
+        {
+          NAV.links.map((l) => (
+            <li>
+              <a class="nav__link" href={l.href} data-leaf={l.leaf}>
+                <span class="nav__tick" aria-hidden="true" />
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="nav__controls" role="group" aria-label="Page controls">
+      <button class="nav__ctl" type="button" data-ctl="inspect" aria-pressed="false" data-tip="Inspect (I)">
+        <PixelIcon name="inspect" />
+        <span class="sr-only">Inspect mode</span>
+      </button>
+      <button class="nav__ctl" type="button" data-ctl="sound" aria-pressed="false" data-tip="Sound">
+        <PixelIcon name="sound-off" class="ico-off" />
+        <PixelIcon name="sound-on" class="ico-on" />
+        <span class="sr-only">Interface sound</span>
+      </button>
+      <button class="nav__ctl" type="button" data-ctl="motion" aria-pressed="true" data-tip="Motion">
+        <PixelIcon name="motion" />
+        <span class="sr-only">Animation</span>
+      </button>
+      <button class="nav__ctl" type="button" data-ctl="theme" data-tip="Light / dark">
+        <PixelIcon name="theme" />
+        <span class="sr-only">Switch to light theme</span>
+      </button>
+    </div>
+
+    <Button href="/start/" variant="gold" size="s" class="nav__cta" magnetic>{NAV.cta}</Button>
+
+    <button class="nav__menu-btn nx" data-size="s" type="button" aria-haspopup="dialog" aria-controls="menu" data-ctl="menu">
+      <PixelIcon name="menu" />
+      <span>Menu</span>
+    </button>
+  </div>
+</header>
+
+<dialog class="menu" id="menu" aria-label="Menu" data-menu>
+  <div class="menu__inner wrap">
+    <div class="menu__top">
+      <span class="menu__word" aria-hidden="true">Felixis</span>
+      <button class="menu__close nx" data-size="s" type="button" data-ctl="menu-close">
+        <PixelIcon name="close" />
+        <span>Close</span>
+      </button>
+    </div>
+    <ul role="list" class="menu__links">
+      {
+        [...NAV.links, { label: NAV.cta, href: '/start/', leaf: 'gold' }].map((l, i) => (
+          <li style={`--i:${i}`}>
+            <a href={l.href} data-leaf={l.leaf}>
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="menu__controls">
+      <button class="nav__ctl" type="button" data-ctl="theme"><PixelIcon name="theme" /><span>Light / dark</span></button>
+      <button class="nav__ctl" type="button" data-ctl="sound" aria-pressed="false"
+        ><PixelIcon name="sound-off" class="ico-off" /><PixelIcon name="sound-on" class="ico-on" /><span>Sound</span></button
+      >
+      <button class="nav__ctl" type="button" data-ctl="motion" aria-pressed="true"><PixelIcon name="motion" /><span>Motion</span></button>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .nav {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: var(--z-nav);
+    height: var(--nav-h);
+    pointer-events: none;
+  }
+
+  /* Backdrop appears once the page has scrolled; drawn on a pseudo so the bar itself never blurs. */
+  .nav::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(var(--ground-rgb) / 0.78);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transition: opacity var(--d-3) var(--ease-out);
+  }
+
+  :global(html.scrolled) .nav::before {
+    opacity: 1;
+  }
+
+  .nav__bar {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    pointer-events: auto;
+  }
+
+  .nav__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    margin-right: auto;
+    min-height: 44px;
+  }
+
+  .nav__clover {
+    width: 26px;
+    height: 26px;
+  }
+
+  /* Progress meter: cells past the scroll position are dimmed. */
+  .nav__clover :global(.clover__cell) {
+    transition: opacity var(--d-1) steps(2, jump-none);
+  }
+  :global(html.js) .nav__clover :global(.clover__cell.is-off) {
+    opacity: 0.38;
+  }
+
+  .nav__word {
+    font-weight: 700;
+    font-size: 1.375rem;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .nav__links {
+    display: flex;
+    gap: var(--s-1);
+  }
+
+  .nav__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 var(--s-2);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink-2);
+    text-decoration: none;
+    transition: color var(--d-1) var(--ease-out);
+  }
+
+  .nav__link:hover,
+  .nav__link[aria-current='page'] {
+    color: var(--ink);
+  }
+
+  /* One cell marks the current page, coloured by its leaf. */
+  .nav__tick {
+    width: 6px;
+    height: 6px;
+    background: var(--leaf);
+    transform: scale(0);
+    transition: transform var(--d-2) steps(3, jump-end);
+  }
+  .nav__link[data-leaf='design'] .nav__tick {
+    background: var(--gold);
+  }
+  .nav__link:hover .nav__tick,
+  .nav__link[aria-current='page'] .nav__tick {
+    transform: scale(1);
+  }
+
+  .nav__controls {
+    display: flex;
+    gap: 2px;
+  }
+
+  .nav__ctl {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    color: var(--ink-2);
+    transition: color var(--d-1) var(--ease-out);
+  }
+
+  .nav__ctl:hover,
+  .nav__ctl[aria-pressed='true'] {
+    color: var(--ink);
+  }
+
+  .nav__ctl[data-ctl='inspect'][aria-pressed='true'] {
+    color: var(--gold);
+  }
+
+  .nav__ctl :global(.ico-on),
+  .nav__ctl[aria-pressed='true'] :global(.ico-off) {
+    display: none;
+  }
+  .nav__ctl[aria-pressed='true'] :global(.ico-on) {
+    display: block;
+  }
+
+  .nav__ctl[data-ctl='motion'][aria-pressed='false'] {
+    color: var(--ink-2);
+    opacity: 0.6;
+  }
+
+  /* tooltip */
+  .nav__ctl[data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    translate: -50% 0;
+    padding: 4px 8px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--ground);
+    background: var(--ink);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--d-1) var(--ease-out);
+  }
+  .nav__ctl[data-tip]:hover::after,
+  .nav__ctl[data-tip]:focus-visible::after {
+    opacity: 1;
+  }
+
+  .nav__menu-btn {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 var(--s-3);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    --nx-fill: transparent;
+  }
+
+  @media (max-width: 1100px) {
+    .nav__main,
+    .nav__controls {
+      display: none;
+    }
+    .nav__menu-btn {
+      display: inline-flex;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .nav :global(.nav__cta) {
+      display: none;
+    }
+  }
+
+  /* menu dialog */
+  .menu {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--ground);
+    color: var(--ink);
+  }
+
+  .menu::backdrop {
+    background: transparent;
+  }
+
+  .menu__inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding-block: var(--s-3) var(--s-6);
+  }
+
+  .menu__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: calc(var(--nav-h) - var(--s-3));
+  }
+
+  .menu__word {
+    font-weight: 700;
+    font-size: 1.375rem;
+    letter-spacing: -0.03em;
+  }
+
+  .menu__close {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 var(--s-3);
+    font-weight: 600;
+    --nx-fill: transparent;
+  }
+
+  .menu__links {
+    margin-top: auto;
+    display: grid;
+    gap: var(--s-1);
+  }
+
+  .menu__links a {
+    display: block;
+    padding-block: 4px;
+    font-size: clamp(2.25rem, 9vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    text-decoration: none;
+  }
+
+  .menu__links a[data-leaf='gold'] {
+    color: var(--gold);
+  }
+
+  .menu[open] .menu__links li {
+    animation: menu-in var(--d-3) steps(4, jump-end) both;
+    animation-delay: calc(var(--i) * 45ms + 120ms);
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+
+  .menu__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: var(--s-8);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--line);
+  }
+
+  .menu__controls .nav__ctl {
+    width: auto;
+    gap: 10px;
+    display: inline-flex;
+    padding: 0 var(--s-2);
+    min-height: 44px;
+    font-weight: 500;
+  }
+
+  :global(html.motion-reduce) .menu[open] .menu__links li {
+    animation: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu[open] .menu__links li {
+      animation: none;
+    }
+  }
+</style>

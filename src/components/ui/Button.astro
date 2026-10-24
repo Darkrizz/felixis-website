@@ -1,0 +1,115 @@
+---
+// Notched button. Hover fills it in six pixel steps (steps(6)), the same rhythm as every
+// other "pixel moment" on the site. Primary buttons are also magnetic (data-fx="magnetic").
+interface Props {
+  href?: string;
+  variant?: 'gold' | 'line' | 'plain';
+  notch?: 'tl' | 'tr' | 'bl' | 'br';
+  size?: 'm' | 's';
+  type?: 'button' | 'submit';
+  magnetic?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, variant = 'line', notch = 'tl', size = 'm', type = 'button', magnetic = false, class: cls, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  class:list={['btn', 'nx', `btn--${variant}`, `btn--${size}`, cls]}
+  href={href}
+  type={href ? undefined : type}
+  data-notch={notch}
+  data-size={size === 's' ? 's' : undefined}
+  data-fx={magnetic ? 'magnetic' : undefined}
+  data-inspect={variant === 'gold' ? 'Button / gold' : 'Button / line'}
+  {...rest}
+>
+  <span class="btn__fill" aria-hidden="true"></span>
+  <span class="btn__label"><slot /></span>
+</Tag>
+
+<style>
+  .btn {
+    --nx-fill: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 48px;
+    padding: 0 var(--s-4);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--ink);
+    overflow: hidden;
+    transition: color var(--d-1) steps(2, jump-none);
+  }
+
+  .btn--s {
+    min-height: 40px;
+    padding: 0 var(--s-3);
+    font-size: 0.9375rem;
+  }
+
+  .btn__label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  /* The stepped fill: a block that sweeps in six hard steps, clipped to the notch shape. */
+  .btn__fill {
+    position: absolute;
+    inset: 1px;
+    clip-path: var(--nx-poly);
+    background: var(--btn-sweep, var(--ink));
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--d-3) steps(6, jump-end);
+    z-index: -1;
+  }
+
+  .btn:hover .btn__fill,
+  .btn:focus-visible .btn__fill {
+    transform: scaleX(1);
+  }
+
+  .btn--line:hover,
+  .btn--line:focus-visible {
+    color: var(--ground);
+  }
+
+  .btn--gold {
+    --nx-fill: var(--gold);
+    --nx-line: var(--gold);
+    --btn-sweep: var(--paper);
+    color: var(--on-gold);
+  }
+
+  .btn--gold:hover,
+  .btn--gold:focus-visible {
+    color: var(--forest);
+  }
+
+  .btn--plain {
+    --nx-line: transparent;
+    padding-inline: var(--s-2);
+  }
+
+  .btn:active .btn__label {
+    transform: translateY(1px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn__fill {
+      transition: none;
+    }
+  }
+  :global(html.motion-reduce) .btn__fill {
+    transition: none;
+  }
+</style>

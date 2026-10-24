@@ -1,0 +1,157 @@
+---
+import Base from '../../layouts/Base.astro';
+import { LAB } from '../../data/lab';
+import { site } from '../../data/site.config.mjs';
+import VoxelSandbox from '../../components/lab/VoxelSandbox.astro';
+import Sequencer from '../../components/lab/Sequencer.astro';
+import MakeAMark from '../../components/lab/MakeAMark.astro';
+import TypePlayground from '../../components/lab/TypePlayground.astro';
+import CellShader from '../../components/lab/CellShader.astro';
+import FlowField from '../../components/lab/FlowField.astro';
+
+export function getStaticPaths() {
+  return LAB.map((x) => ({ params: { slug: x.slug } }));
+}
+
+const { slug } = Astro.params;
+const i = LAB.findIndex((x) => x.slug === slug);
+const x = LAB[i];
+const next = LAB[(i + 1) % LAB.length];
+const prev = LAB[(i - 1 + LAB.length) % LAB.length];
+const EXP: Record<string, any> = {
+  'voxel-sandbox': VoxelSandbox,
+  sequencer: Sequencer,
+  'make-a-mark': MakeAMark,
+  'type-playground': TypePlayground,
+  'cell-shader': CellShader,
+  'flow-field': FlowField,
+};
+const Exp = EXP[x.slug];
+---
+
+<Base
+  title={`${x.title}: an interactive experiment | Felixis lab`}
+  description={`${x.line} Built with ${x.how}.`}
+  page="experiment"
+  formation={x.formation}
+  crumbs={[{ name: 'Lab', path: '/lab/' }, { name: x.title, path: `/lab/${x.slug}/` }]}
+  schema={[{ '@type': 'CreativeWork', name: x.title, description: x.line, url: `${new URL(`/lab/${x.slug}/`, site.url).href}`, creator: { '@id': new URL('/#organization', site.url).href }, inLanguage: 'en-GB' }]}
+>
+  <article class="exp" aria-labelledby="exp-title" data-experiment={x.slug}>
+    <header class="wrap exp__head">
+      <a class="exp__back" href="/lab/">Lab</a>
+      <h1 id="exp-title" class="exp__title" data-inspect="H1 / experiment">{x.title}</h1>
+      <p class="exp__line">{x.line}</p>
+      <p class="exp__how"><span>Built with</span> {x.how}</p>
+    </header>
+    <div class="wrap">
+      <div class="exp__stage nx" data-size="l" data-notch="br" data-inspect={`Experiment / ${x.title}`}>
+        <Exp />
+      </div>
+    </div>
+    <nav class="wrap exp__nav" aria-label="More experiments">
+      <a class="exp__link" href={`/lab/${prev.slug}/`}><span>Previous</span>{prev.title}</a>
+      <a class="exp__link exp__link--next" href={`/lab/${next.slug}/`}><span>Next</span>{next.title}</a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .exp {
+    padding-top: calc(var(--nav-h) + var(--s-8));
+    padding-bottom: var(--s-16);
+  }
+
+  .exp__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--s-2) var(--gutter);
+    margin-bottom: var(--s-6);
+  }
+
+  .exp__back {
+    grid-column: 1;
+    justify-self: start;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+    padding-block: 10px;
+  }
+
+  .exp__n {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 1.125rem;
+    color: var(--leaf);
+    align-self: center;
+  }
+
+  .exp__title {
+    grid-column: 1 / -1;
+    font-size: var(--step-6);
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+  }
+
+  .exp__line {
+    grid-column: 1;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+
+  .exp__how {
+    grid-column: 1;
+    font-size: 0.9375rem;
+  }
+
+  .exp__how span {
+    color: var(--ink-2);
+    margin-right: 6px;
+  }
+
+  .exp__stage {
+    --nx-fill: var(--surface);
+    padding: var(--s-3);
+  }
+
+  /* the voxel sandbox shows the shared WebGL canvas through its frame */
+  .exp__stage:has([data-demo='sandbox']) {
+    --nx-fill: transparent;
+  }
+
+  .exp__nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--s-2);
+    margin-top: var(--s-6);
+  }
+
+  .exp__link {
+    display: grid;
+    gap: 2px;
+    min-width: min(200px, 100%);
+    padding: var(--s-3) var(--s-4);
+    border: 1px solid var(--line-strong);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: var(--step-1);
+  }
+
+  .exp__link span {
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+
+  .exp__link--next {
+    text-align: right;
+  }
+
+  .exp__link:hover {
+    border-color: var(--leaf);
+  }
+</style>
